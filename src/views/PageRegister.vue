@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { useAppOptionStore } from '@/stores/app-option';
 import { useRouter, RouterLink } from 'vue-router';
 

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import tagsInput from '@/components/plugins/TagsInput.vue';
 
 export default {

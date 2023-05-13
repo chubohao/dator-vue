@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import highlightjs from '@/components/plugins/Highlightjs.vue';
 import navscrollto from '@/components/app/NavScrollTo.vue';
 import axios from 'axios';

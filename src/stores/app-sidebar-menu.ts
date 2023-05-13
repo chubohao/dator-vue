@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 export const useAppSidebarMenuStore = defineStore({
   id: "appSidebarMenu",
   state: () => {
-    return [{
+    return [
+		{
 			text: 'Navigation',
 			is_header: true
 		},
@@ -20,7 +21,7 @@ export const useAppSidebarMenuStore = defineStore({
 		{
 			url: '/email/',
 			icon: 'fa fa-envelope',
-			text: 'Email',
+			text: 'Email [待删除]',
 			label: '6',
 			children: [
 				{ url: '/email/inbox', text: 'Inbox' },
@@ -31,26 +32,43 @@ export const useAppSidebarMenuStore = defineStore({
 		{
 			is_divider: true
 		},
+
 		{
 			text: 'Components',
 			is_header: true
 		},
 		{
+			url: '/devices',
+			icon: 'fa fa-microchip',
+			text: 'Devices'
+		},
+		{
+			url: '/gateways',
+			icon: 'fa fa-sitemap',
+			text: 'Gateways'
+		},
+		{
+			url: '/database',
+			icon: 'fa fa-database',
+			text: 'Database'
+		}, 
+		{
 			url: '/widgets',
 			icon: 'fa fa-qrcode',
-			text: 'Widgets'
-		}, {
+			text: 'Widgets [待删除]'
+		}, 
+		{
 			url: '/pos',
-      icon: 'fa fa-wallet',
-      text: 'POS System',
-      children: [
-      	{ url: '/pos/customer-order', text: 'Customer Order' }, 
-      	{ url: '/pos/kitchen-order', text: 'Kitchen Order' }, 
-      	{ url: '/pos/counter-checkout', text: 'Counter Checkout' }, 
-      	{ url: '/pos/table-booking', text: 'Table Booking' }, 
-      	{ url: '/pos/menu-stock', text: 'Menu Stock' }
-			]
-    },
+			icon: 'fa fa-wallet',
+			text: 'POS System [待删除]',
+			children: [
+				{ url: '/pos/customer-order', text: 'Customer Order' }, 
+				{ url: '/pos/kitchen-order', text: 'Kitchen Order' }, 
+				{ url: '/pos/counter-checkout', text: 'Counter Checkout' }, 
+				{ url: '/pos/table-booking', text: 'Table Booking' }, 
+				{ url: '/pos/menu-stock', text: 'Menu Stock' }
+					]
+		},
 		{
 			url: '/ui/',
 			icon: 'fa fa-heart',

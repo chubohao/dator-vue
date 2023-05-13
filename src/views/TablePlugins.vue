@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { defineComponent, reactive, computed } from 'vue';
 import highlightjs from '@/components/plugins/Highlightjs.vue';
 import vueTable from '@/components/plugins/VueTable.vue';

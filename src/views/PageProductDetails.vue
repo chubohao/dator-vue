@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import tagsInput from '@/components/plugins/TagsInput.vue';
 import quillEditor from '@/components/plugins/quillEditor.vue';
 

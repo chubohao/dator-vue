@@ -47,6 +47,7 @@
     "datatables.net-responsive": "^2.4.1",
     "datatables.net-responsive-bs5": "^2.4.1",
     "datatables.net-vue3": "^2.1.0",
+    "element-plus": "^2.3.4",
     "highlight.js": "^11.7.0",
     "highlightjs": "^9.16.2",
     "jquery": "^3.6.4",
