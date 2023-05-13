@@ -1,6 +1,6 @@
-# hud-vue
+# Dator IoT Platform
 
-This template should help get you started developing with Vue 3 in Vite.
+用于物联网数据分析的平台
 
 ## Recommended IDE Setup
 
