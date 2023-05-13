@@ -106,9 +106,9 @@ function checkForm(event) {
 			<div class="menu-item dropdown">
 				<a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
 					<div class="menu-img online">
-						<img src="/assets/img/user/user.jpg" alt="" class="ms-100 mh-100 rounded-circle">
+						<img src="/assets/img/user/cat.jpg" alt="" class="ms-100 mh-100 rounded-circle">
 					</div>
-					<div class="menu-text">johnsmith@vuestudio.com</div>
+					<div class="menu-text">bohao.chu@qq.com</div>
 				</a>
 				<div class="dropdown-menu dropdown-menu-end me-lg-3">
 					<RouterLink to="/profile" class="dropdown-item d-flex align-items-center">Edit Profile <i class="fa fa-user-circle fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
