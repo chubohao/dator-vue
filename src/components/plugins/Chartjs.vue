@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import Chart from 'chart.js/auto';
 import { useAppVariableStore } from '@/stores/app-variable';
 

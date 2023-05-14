@@ -9,6 +9,8 @@ const router = createRouter({
 	{ path: '/email/compose', component: () => import('@/views/EmailCompose.vue') },
 	{ path: '/email/detail/:id', component: () => import('@/views/EmailDetail.vue') },
 	{ path: '/email/detail', component: () => import('@/views/EmailDetail.vue') },
+
+	{ path: '/devices', component: () => import('@/views/Devices.vue') },
 	{ path: '/widgets', component: () => import('@/views/Widgets.vue') },
 	{ path: '/pos/customer-order', component: () => import('@/views/PosCustomerOrder.vue') },
 	{ path: '/pos/kitchen-order', component: () => import('@/views/PosKitchenOrder.vue') },
