@@ -6,9 +6,9 @@
 - **支持自定义数据分析和可视乎**
 - **基于ChatGPT,支持SDK代码生成**
 
-![主页](./public/readme/home.png "Magic Gardens")
 
-![登录](./public/readme/login.png "Magic Gardens")
+
+
 
 ## 推荐的IDE
 
@@ -30,4 +30,19 @@ npm install
 ```sh
 npm run dev
 ```
+
+## 模块简介
+
+### 登录
+![登录](./public/readme/login.png "Magic Gardens")
+
+### 主页
+![主页](./public/readme/home.png "Magic Gardens")
+
+### 设备列表
+![主页](./public/readme/devicesList.png "Magic Gardens")
+
+### 添加新设备
+![主页](./public/readme/addDevice.png "Magic Gardens")
+
 
