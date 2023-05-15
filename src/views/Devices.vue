@@ -255,7 +255,8 @@ export default {
 					"dataVolume": "60.01",
 					"trend": "+200"
 				}
-			]
+			],
+			fieldNumber: 2
 		}
 	},
 	mounted() {
@@ -299,18 +300,94 @@ export default {
 			
 				<!-- 模态框内容 -->
 				<div class="modal-body">
-					<div>
-						<h1>Device Infomation</h1>
+					<div class="mb-5">
+						<h5>Basic Device Infomation</h5>
+						<!-- VUE LOGIN FORM -->
+						<form v-on:submit.prevent="submitForm()" method="POST" name="register_form">
+							<div class="input-group mb-3">
+								<label class="input-group-text" for="">
+									<i class="fa fa-tag" aria-hidden="true"></i>
+								</label>
+								<input type="text" class="form-control" placeholder="e.g. LoRa Node" value="" />
+							</div>
+							<div class="input-group mb-3">
+								<label class="input-group-text" for="">
+									<i class="fa fa-map-marker" aria-hidden="true"></i>
+								</label>
+								<input type="text" class="form-control" placeholder="e.g. Duisburg" value="" />
+							</div>
+							<div class="input-group mb-3">
+								<label class="input-group-text" for="">
+									<i class="fa fa-barcode" aria-hidden="true"></i>
+								</label>
+								<input class="form-control" placeholder="Password" value="123" />
+							</div>
+							<div class="input-group me-2">
+									<label class="input-group-text" for="">
+										<i class="fa fa-globe" aria-hidden="true"></i>
+									</label>
+									<select class="form-select" aria-label="Default select example">
+										<option selected>String</option>
+										<option value="1">Int</option>
+										<option value="2">Two</option>
+										<option value="3">Three</option>
+									</select>
+							</div>
+						</form>
 					</div>
-					<div>
-						<h1>Data Infomation</h1>
+
+					<div class="">
+						<h5>Field Infomation</h5>
+						<form v-on:submit.prevent="submitForm()" method="POST" name="register_form">
+							<div class="mb-3 d-flex" v-for="n in fieldNumber">
+								<div class="input-group me-2">
+									<label class="input-group-text" for="">
+										<i class="fa fa-bars" aria-hidden="true"></i>
+									</label>
+									<input type="text" class="form-control" placeholder="Field Name">
+								</div>
+								
+								<div class="input-group me-2">
+									<label class="input-group-text" for="">
+										<i class="fa fa-globe" aria-hidden="true"></i>
+									</label>
+									<select class="form-select" aria-label="Default select example">
+										<option selected>String</option>
+										<option value="1">Int</option>
+										<option value="2">Two</option>
+										<option value="3">Three</option>
+									</select>
+								</div>
+
+								<div class="input-group me-2">
+									<label class="input-group-text" for="">
+										<i class="fa fa-bookmark" aria-hidden="true"></i>
+									</label>
+									
+									<input type="text" class="form-control" placeholder="Length">
+								</div>
+								
+								<div class="btn btn-secondary" @click="fieldNumber--">
+									<i class="fa fa-minus-square" aria-hidden="true"></i>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<!-- SUBMIT BUTTON -->
+					<div class="m-3 text-center">
+						<div class="btn btn-secondary" @click="fieldNumber++">
+							<i class="fa fa-plus-square" aria-hidden="true"></i>
+						</div>
 					</div>
 				</div>
 			
 				<!-- 模态框底部 -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+				<div class="m-3 text-center">
+					<button class="btn btn-theme w-100">Submit</button>
 				</div>
+				
+
 			
 				</div>
 			</div>
