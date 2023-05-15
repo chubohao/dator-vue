@@ -5,6 +5,7 @@ import datepicker from 'vue3-datepicker';
 import Masonry from 'masonry-layout';
 import moment from 'moment';
 
+
 let appVariable = useAppVariableStore();
 
 export default {
@@ -256,6 +257,8 @@ export default {
 		<span class="ms-3">compared to {{ getPrevDay() }}</span>
 	</div>
 	<!-- END daterangepicker -->
+
+	
 
 	<!-- BEGIN row -->
 	<div class="row" data-masonry='{"percentPosition": true }' v-if="renderComponent">

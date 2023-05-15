@@ -1,12 +1,22 @@
 <script lang="ts">
 import { useAppVariableStore } from '@/stores/app-variable';
 import apexchart from '@/components/plugins/Apexcharts.vue';
+import highlightjs from '@/components/plugins/Highlightjs.vue';
+import navscrollto from '@/components/app/NavScrollTo.vue';
+import jsVectorMap from 'jsvectormap';
+import { GoogleMap, Marker } from 'vue3-google-map';
+import 'jsvectormap/dist/maps/world.js';
+import 'jsvectormap/dist/css/jsvectormap.min.css';
 
 const appVariable = useAppVariableStore();
 
 export default {
 	components: {
-		apexchart: apexchart
+		apexchart: apexchart,
+		highlightjs: highlightjs,
+		navScrollTo: navscrollto,
+		googleMap: GoogleMap,
+		googleMapMarker: Marker
 	},
 	data() {
 		return {
@@ -20,7 +30,7 @@ export default {
 					]
 				}],
 				options: this.getChartOptions()
-			},
+			}
 		}
 	},
 	methods: {
@@ -117,7 +127,75 @@ export default {
 				grid: { padding: { right: 30, left: 20 } },
 				xaxis: { type: 'datetime' } 
 			};
+		},
+		renderMap() {
+			document.getElementById('map-container').innerHTML = '<div id="map" style="height: 300px;"></div>';
+			var markers = [
+				{ name: "Egypt", coords: [26.8206, 30.8025] },
+				{ name: "Russia", coords: [61.524, 105.3188] },
+				{ name: "Canada", coords: [56.1304, -106.3468] },
+				{ name: "Greenland", coords: [71.7069, -42.6043] },
+				{ name: "Brazil", coords: [-14.235, -51.9253] }
+			];
+			var map = new jsVectorMap({
+				selector: '#map',
+				map: 'world',
+				zoomButtons: true,
+				normalizeFunction: 'polynomial',
+				hoverOpacity: 0.5,
+				hoverColor: false,
+				zoomOnScroll: false,
+				series: {
+					regions: [{
+						normalizeFunction: 'polynomial'
+					}]
+				},
+				labels: {
+					markers: {
+						render: (marker) => marker.name
+					}
+				},
+				focusOn: {
+					x: 0.5,
+					y: 0.5,
+					scale: 1
+				},
+				markers: markers,
+				markerStyle: {
+					initial: {
+						fill: appVariable.color.theme,
+						stroke: 'none',
+						r: 5,
+					},
+					hover: {
+						fill: appVariable.color.theme
+					}
+				},
+				markerLabelStyle: {
+					initial: {
+						fontFamily: appVariable.font.bodyFontFamily,
+						fontSize: '12px',
+						fill: appVariable.color.bodyColor
+					},
+				},
+				regionStyle: {
+					initial: {
+						fill: appVariable.color.gray600,
+						fillOpacity: .5,
+						stroke: 'none',
+						strokeWidth: 0.4,
+						strokeOpacity: 1
+					},
+					hover: {
+						fillOpacity: .25
+					}
+				},
+				backgroundColor: 'transparent',
+			});
 		}
+	},
+	mounted() {
+		this.renderMap();
 	},
 	created() {
 		this.emitter.on('theme-reload', (evt) => {
@@ -135,7 +213,6 @@ export default {
 		Hi, Bohao Chu. <small>here's what's happening with your store today.</small>
 	</h1>
 
-	
 	<!-- BEGIN row -->
 	<div class="row">
 		<!-- BEGIN COL-6 -->
@@ -314,7 +391,17 @@ export default {
 		<!-- END COL-6 -->
 	</div>
 	<!-- END row -->
-	
+
+	<!-- BEGIN JSVECTORMAP -->
+	<div id="jsvectormap" class="mb-5">
+		<card>
+			<card-body>
+				<div id="map-container"></div>
+			</card-body>
+		</card>
+	</div>
+	<!-- END JSVECTORMAP -->
+
 	<!-- BEGIN row -->
 	<div class="row">
 		<!-- BEGIN col-6 -->
@@ -533,6 +620,8 @@ export default {
 		<!-- END col-6 -->
 	</div>
 	<!-- END row -->
+
+	
 
 	<!-- BEGIN row -->
 	<div class="row">

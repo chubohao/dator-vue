@@ -4,6 +4,7 @@ import chartjs from '@/components/plugins/Chartjs.vue';
 import datepicker from 'vue3-datepicker';
 import Masonry from 'masonry-layout';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 
 let appVariable = useAppVariableStore();
 
@@ -16,7 +17,7 @@ export default {
 		getPrevDay() {
 			return this.prevDay;
 		},
-		updateDate(newDate) {
+		updateDate(newDate:any) {
 			this.prevDay = moment(newDate).add(-1, 'd').format('YYYY-MM-DD');
 			this.selectedDay = moment(newDate).format('YYYY-MM-DD');
 		},
@@ -183,7 +184,7 @@ export default {
 				}]
 			};
 		},
-		getStatuOfDevice(status) {
+		getStatuOfDevice(status:any) {
 			if (status == 0){
 				return {"background-color": "#2F4F4F"}
 			}else if (status == 1){
@@ -192,6 +193,54 @@ export default {
 				return {"background-color": "red"}
 			}
 			
+		},
+		getUUID(){
+			return uuidv4().toUpperCase();
+		},
+		submitForm(){
+			this.$emit('submit', this.newDeviceVO)
+			console.log(this.newDeviceVO)
+		},
+		callAPI(){
+
+			return [
+				{
+					"name": "LoRa",
+					"uuid": "96F5E825-9141-42E8-8EE5-B0C2D07238E4",
+					"status": 0,
+					"img": "/assets/img/devices/device1.svg",
+					"location": "Duisburg",
+					"dataVolume": "80",
+					"trend": "+5"
+				},
+				{
+					"name": "Sensor",
+					"uuid": "FC4372C7-F49F-4F33-9BBA-8DF0CDA19A52",
+					"status": 1,
+					"img": "/assets/img/devices/device2.svg",
+					"location": "Düsseldorf",
+					"dataVolume": "10",
+					"trend": "+1"
+				},
+				{
+					"name": "Gateway",
+					"uuid": "ED96EDB3-7FA9-4F02-B699-104AB0F5F857",
+					"status": 1,
+					"img": "/assets/img/devices/device3.svg",
+					"location": "Beijing",
+					"dataVolume": "100.9",
+					"trend": "+101"
+				},
+				{
+					"name": "NB-IoT",
+					"uuid": "4190B276-05CB-40DC-8628-01F8336927C0",
+					"status": 3,
+					"img": "/assets/img/devices/device4.svg",
+					"location": "Shanghai",
+					"dataVolume": "60.01",
+					"trend": "+200"
+				}
+			]
 		}
 	},
 	data() {
@@ -221,41 +270,14 @@ export default {
 				type: 'line',
 				data: this.getChart5Data()
 			},
-			devices_info:[
-				{
-					"name": "LoRa",
-					"status": 0,
-					"img": "/assets/img/devices/device1.svg",
-					"location": "Duisburg",
-					"dataVolume": "80",
-					"trend": "+5"
-
-				},
-				{
-					"name": "Sensor",
-					"status": 1,
-					"img": "/assets/img/devices/device2.svg",
-					"location": "Düsseldorf",
-					"dataVolume": "10",
-					"trend": "+1"
-				},
-				{
-					"name": "Gateway",
-					"status": 1,
-					"img": "/assets/img/devices/device3.svg",
-					"location": "Beijing",
-					"dataVolume": "100.9",
-					"trend": "+101"
-				},
-				{
-					"name": "NB-IoT",
-					"status": 3,
-					"img": "/assets/img/devices/device4.svg",
-					"location": "Shanghai",
-					"dataVolume": "60.01",
-					"trend": "+200"
-				}
-			],
+			newDeviceVO: {
+				"name": "",
+				"uuid": "",
+				"location": "",
+				"protocol": "",
+				"type": ""
+			},
+			
 			fieldNumber: 2
 		}
 	},
@@ -265,7 +287,6 @@ export default {
 	created() {
 		this.emitter.on('theme-reload', (evt) => {
 			this.renderComponent = false;
-			
 			this.$nextTick(() => {
 				this.chart1.data = this.getChart1Data();
 				this.chart2.data = this.getChart2Data();
@@ -282,116 +303,127 @@ export default {
 }
 </script>
 <template>
-	<!-- BEGIN daterangepicker -->
+	<!-- BEGIN HEADER -->
 	<div class="d-flex align-items-center mb-3">
 		<div class="btn btn-primary me-2"  data-bs-toggle="modal" data-bs-target="#add">
 			Add New Device
 		</div>
-		<!-- 模态框 -->
-		<div class="modal mt-5 modal-lg" id="add">
+
+		<!-- BEGIN 添加设备模态框 -->
+		<div class="modal modal-lg" id="add">
 			<div class="modal-dialog">
-				<div class="modal-content">
-			
-				<!-- 模态框头部 -->
-				<div class="modal-header">
-					<h4 class="modal-title">Add New Device</h4>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-			
-				<!-- 模态框内容 -->
-				<div class="modal-body">
-					<div class="mb-5">
-						<h5>Basic Device Infomation</h5>
-						<!-- VUE LOGIN FORM -->
-						<form v-on:submit.prevent="submitForm()" method="POST" name="register_form">
-							<div class="input-group mb-3">
-								<label class="input-group-text" for="">
-									<i class="fa fa-tag" aria-hidden="true"></i>
-								</label>
-								<input type="text" class="form-control" placeholder="e.g. LoRa Node" value="" />
-							</div>
-							<div class="input-group mb-3">
-								<label class="input-group-text" for="">
-									<i class="fa fa-map-marker" aria-hidden="true"></i>
-								</label>
-								<input type="text" class="form-control" placeholder="e.g. Duisburg" value="" />
-							</div>
-							<div class="input-group mb-3">
-								<label class="input-group-text" for="">
-									<i class="fa fa-barcode" aria-hidden="true"></i>
-								</label>
-								<input class="form-control" placeholder="Password" value="123" />
-							</div>
-							<div class="input-group me-2">
-									<label class="input-group-text" for="">
-										<i class="fa fa-globe" aria-hidden="true"></i>
-									</label>
-									<select class="form-select" aria-label="Default select example">
-										<option selected>String</option>
-										<option value="1">Int</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-							</div>
-						</form>
+				<div class="modal-content px-4 py-2">
+					<!-- 模态框头部 -->
+					<div class="modal-header border-0">
+						<h4 class="modal-title">ADD A NEW DEVICE</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
+				
+					<!-- 设备信息 -->
+					<div class="modal-body">
+						<div class="mb-5">
+							<h5>Basic Device Infomation</h5>
+							
+							<form @submit.prevent="submitForm" method="POST" name="register_form">
+								<!-- 设备名字 -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for=""><i class="fa fa-tag" aria-hidden="true"></i></label>
+									<input type="text" class="form-control" placeholder="Device Name, e.g. LoRa Node" v-model="newDeviceVO.name"/>
+								</div>
 
-					<div class="">
-						<h5>Field Infomation</h5>
-						<form v-on:submit.prevent="submitForm()" method="POST" name="register_form">
-							<div class="mb-3 d-flex" v-for="n in fieldNumber">
-								<div class="input-group me-2">
+								<!-- 设备地址 -->
+								<div class="input-group mb-3">
 									<label class="input-group-text" for="">
-										<i class="fa fa-bars" aria-hidden="true"></i>
+										<i class="fa fa-map-marker" aria-hidden="true"></i>
 									</label>
-									<input type="text" class="form-control" placeholder="Field Name">
+									<input type="text" class="form-control" placeholder="Device Location, e.g. Duisburg" v-model="newDeviceVO.location"/>
 								</div>
 								
-								<div class="input-group me-2">
-									<label class="input-group-text" for="">
-										<i class="fa fa-globe" aria-hidden="true"></i>
-									</label>
-									<select class="form-select" aria-label="Default select example">
-										<option selected>String</option>
-										<option value="1">Int</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
+								<!-- 设备类型 -->
+								<div class="input-group mb-3">
+										<label class="input-group-text" for=""><i class="fa fa-globe" aria-hidden="true"></i></label>
+										<select class="form-select" aria-label="Default select example" v-model="newDeviceVO.type">
+											<option selected>Select Device Type</option>
+											<option value="1" class="strong">Direct Device</option>
+											<option value="2">Gateway Device</option>
+											<option value="3">Virtual Device</option>
+										</select>
 								</div>
 
-								<div class="input-group me-2">
-									<label class="input-group-text" for="">
-										<i class="fa fa-bookmark" aria-hidden="true"></i>
-									</label>
+								<!-- 网络协议类型 -->
+								<div class="input-group mb-3">
+										<label class="input-group-text"><i class="fa fa-globe" aria-hidden="true"></i></label>
+										<select class="form-select" aria-label="Default select example" v-model="newDeviceVO.protocol">
+											<option selected>Select transport protocol</option>
+											<option value="1">HTTP</option>
+											<option value="2">MQTT</option>
+										</select>
+								</div>
+
+								<!-- BEGIN 设备 UUID -->
+								<div class="input-group mb-3">
+									<label class="input-group-text"><i class="fa fa-barcode" aria-hidden="true"></i></label>
+									<input class="form-control" placeholder="UUID" :value="getUUID()" :v-model="newDeviceVO.uuid" disabled/>
+								</div>
+								<!-- END 设备 UUID -->
+							</form>
+						</div>
+						
+
+						<!-- 字段信息 -->
+						<div>
+							<h5>Field Infomation</h5>
+							<form @submit.prevent="submitForm" method="POST" name="register_form">
+								<div class="mb-3 d-flex" v-for="n in fieldNumber">
+									<div class="input-group me-2">
+										<label class="input-group-text" for="">
+											<i class="fa fa-bars" aria-hidden="true"></i>
+										</label>
+										<input type="text" class="form-control" placeholder="Field Name">
+									</div>
 									
-									<input type="text" class="form-control" placeholder="Length">
-								</div>
-								
-								<div class="btn btn-secondary" @click="fieldNumber--">
-									<i class="fa fa-minus-square" aria-hidden="true"></i>
-								</div>
-							</div>
-						</form>
-					</div>
+									<div class="input-group me-2">
+										<label class="input-group-text" for="">
+											<i class="fa fa-globe" aria-hidden="true"></i>
+										</label>
+										<select class="form-select" aria-label="Default select example" placeholder="Type e.g. Int">
+											<option value="1">Int</option>
+											<option value="2">Two</option>
+											<option value="3">Three</option>
+										</select>
+									</div>
 
-					<!-- SUBMIT BUTTON -->
-					<div class="m-3 text-center">
-						<div class="btn btn-secondary" @click="fieldNumber++">
-							<i class="fa fa-plus-square" aria-hidden="true"></i>
+									<div class="input-group me-2">
+										<label class="input-group-text" for="">
+											<i class="fa fa-bookmark" aria-hidden="true"></i>
+										</label>
+										
+										<input type="text" class="form-control" placeholder="Length">
+									</div>
+									
+									<div class="btn btn-secondary" @click="fieldNumber--">
+										<i class="fa fa-minus-square" aria-hidden="true"></i>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<!-- SUBMIT BUTTON -->
+						<div class="m-3 text-center">
+							<div class="btn btn-secondary" @click="fieldNumber++">
+								<i class="fa fa-plus-square" aria-hidden="true"></i>
+							</div>
 						</div>
 					</div>
-				</div>
-			
-				<!-- 模态框底部 -->
-				<div class="m-3 text-center">
-					<button class="btn btn-theme w-100">Submit</button>
-				</div>
 				
-
-			
+					<!-- 模态框底部 -->
+					<div class="m-3 text-center">
+						<button type="submit" class="btn btn-theme w-100">Submit</button>
+					</div>
 				</div>
 			</div>
 		</div>
+		<!-- END 添加设备模态框 -->
 
 		<div class="btn btn-default d-flex align-items-center me-2">
 			<label for="datepicker" class="">
@@ -414,29 +446,37 @@ export default {
 		
 		<!-- <span class="ms-3">compared to {{ getPrevDay() }}</span>-->
 	</div>
-	
-	<!-- END daterangepicker -->
+	<!-- END HEADER -->
 
-	<!-- BEGIN row -->
+	<!-- BEGIN BODY -->
 	<div class="row" data-masonry='{"percentPosition": true }' v-if="renderComponent">
-		<!-- BEGIN col-4 -->
-		<div class="col-lg-6 col-xl-4 mb-3" v-for="(device) in devices_info">
+		<!-- BEGIN 设备列表 -->
+		<div class="col-lg-6 col-xl-4 mb-3" v-for="(device) in callAPI()">
 			<!-- BEGIN card -->
 			<card class="mask">
-				<card-body class="">
+				<card-body>
 					<div class="row">
-						<div class="col-4">
-							<img :src="device.img" alt="" height="70">
+						<!-- BEGIN 设备LOGO -->
+						<div class="col-3">
+							<img :src="device.img" alt="" height="60">
 						</div>
+						<!-- END 设备LOGO -->
 						
-						<div class="col-8 p-1">
-							<!-- NAME AND STATUS -->
+						<div class="col-9 px-2">
+							<!-- BEGIN 设备名字和状态 -->
 							<div class="d-flex align-items-center mb-2">
 								<a href="" class="flex-fill fw-bold h5 text-decoration-none">{{device.name}}</a>
 								<div class="btn-circle" :style="getStatuOfDevice(device.status)"></div>
 							</div>
+							<!-- END 设备名字和状态 -->
 
-							<!-- DETAIL -->
+							<!-- BEGIN 设备UUID -->
+							<div class="d-flex align-items-center mb-2">
+								<span class="flex-fill small">{{device.uuid}}</span>
+							</div>
+							<!-- END 设备UUID -->
+
+							<!-- BEGIN 设备位置，数据量和趋势 -->
 							<div class="d-flex align-items-center mb-3">
 								<i class="flex-fill fa fa-map-marker" aria-hidden="true"></i>
 								<div class="flex-fill">{{device.location}}</div>
@@ -447,19 +487,17 @@ export default {
 								<i class="flex-fill fa fa-line-chart" aria-hidden="true"></i>
 								<small class="fw-400 ms-auto text-theme">{{device.trend}} %</small>
 							</div>
+							<!-- END 设备位置，数据量和趋势 -->
 						</div>
 					</div>
-					
-			
-					
 				</card-body>
 			</card>
 			<!-- END card -->
 		</div>
-		<!-- END col-4 -->
+		<!-- END 设备列表 -->
 
 	</div>
-	<!-- END row -->
+	<!-- END BODY -->
 </template>
 
 <style>
@@ -475,8 +513,8 @@ export default {
 	);
 }
 .btn-circle {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
 }
 </style>

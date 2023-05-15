@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import 'highlight.js/lib/common';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 
