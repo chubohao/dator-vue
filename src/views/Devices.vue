@@ -454,6 +454,8 @@ export default {
 		<div class="col-lg-6 col-xl-4 mb-3" v-for="(device) in callAPI()">
 			<!-- BEGIN card -->
 			<card class="mask">
+				<div class="card-header border-0">
+				</div>
 				<card-body>
 					<div class="row">
 						<!-- BEGIN 设备LOGO -->
@@ -502,7 +504,7 @@ export default {
 
 <style>
 .mask {
-	transition: transform .2s;
+	transition: transform .5s;
 }
 .mask:hover {
 	transform: scale(1.05);
