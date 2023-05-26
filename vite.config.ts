@@ -15,5 +15,11 @@ export default defineConfig({
 
   optimizeDeps: {
     exclude: ['vue-demi']
-	}
+	},
+  
+  server: {
+    proxy: {
+      "/api": "http://testapi.xuexiluxian.cn"
+    }
+  }
 });

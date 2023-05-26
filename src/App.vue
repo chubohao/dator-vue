@@ -19,22 +19,15 @@ router.beforeEach(async (to, from) => {
 	appOption.appSidebarMobileToggled = false;
 	document.body.scrollTop = 0;
   	document.documentElement.scrollTop = 0;
-  
-	var targetElm = [].slice.call(document.querySelectorAll('.app-sidebar .menu-submenu'));
-	targetElm.map(function(elm) {
-		elm.style.display = '';
-	});
 })
 
 router.afterEach(async (to, from) => {
 	progresses.pop()?.finish();
 })
 
-document.querySelector('body').classList.add('app-init');
 </script>
 
 <template>
-	<!-- 样式 -->
 	<div class="app" v-bind:class="{ 
 		'app-header-menu-search-toggled': appOption.appHeaderSearchToggled,
 		'app-sidebar-minified': appOption.appSidebarMinified,

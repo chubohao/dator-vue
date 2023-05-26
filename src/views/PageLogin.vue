@@ -1,6 +1,7 @@
 <script lang="ts">
 import { useAppOptionStore } from '@/stores/app-option';
 import { useRouter, RouterLink } from 'vue-router';
+import { login } from '@/api/user'
 
 const appOption = useAppOptionStore();
 
@@ -17,7 +18,11 @@ export default {
 	},
 	methods: {
 		submitForm: function() {
-			this.$router.push('/');
+			var res = login(this.userForm)
+			console.log(res)
+			if (res.status == 200){
+				this.$router.push('/');
+			}
 		},
 		switchStatus() {
 			this.passwordStatus = !this.passwordStatus;
@@ -31,13 +36,13 @@ export default {
 		loading: false,
 		switchText: "password",
 		switchIcon: "eye",
-		userInfo: {
-			account: "",
+		userForm: {
+			email: "",
 			password: "",
 		},
 
 		rules: {
-			account: [
+			email: [
 			{
 				required: true,
 				message: "Please enter your email",
@@ -94,15 +99,12 @@ export default {
 					<div class="card-body py-5 px-md-5 mx-4 text-center">
 						
 						<!-- VUE LOGIN FORM -->
-						<form v-on:submit.prevent="submitForm()" method="POST" name="register_form">
+						<form v-on:submit.prevent="submitForm()" name="userInfo">
 							<div class="mb-3">
-								<input type="text" class="form-control form-control-lg fs-14px" placeholder="Name e.g. Steve" value="" />
+								<input type="email" class="form-control form-control-lg fs-14px" placeholder="User Email" v-model="userForm.email"/>
 							</div>
 							<div class="mb-3">
-								<input type="text" class="form-control form-control-lg fs-14px" placeholder="Email e.g. bohao.chu@qq.com" value="" />
-							</div>
-							<div class="mb-3">
-								<input type="password" class="form-control form-control-lg fs-14px" placeholder="Password" value="" />
+								<input type="password" class="form-control form-control-lg fs-14px" placeholder="User Password" v-model="userForm.password"/>
 							</div>
 							<div class="mb-3">
 								<button type="submit" class="btn btn-theme btn-lg fs-14px fw-500 d-block w-100">Sign Up</button>

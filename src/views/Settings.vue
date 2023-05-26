@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import navscrollto from '@/components/app/NavScrollTo.vue';
 import { ScrollSpy } from 'bootstrap';
 

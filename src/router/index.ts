@@ -4,6 +4,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: () => import('@/views/Dashboard.vue') },
+
+	
 	{ path: '/analytics', component: () => import('@/views/Analytics.vue') },
 	{ path: '/email/inbox', component: () => import('@/views/EmailInbox.vue') },
 	{ path: '/email/compose', component: () => import('@/views/EmailCompose.vue') },

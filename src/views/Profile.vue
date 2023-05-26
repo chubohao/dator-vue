@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import 'lity';
 import 'lity/dist/lity.min.css';
 import { useAppOptionStore } from '@/stores/app-option';
