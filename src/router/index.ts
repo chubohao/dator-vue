@@ -10,7 +10,9 @@ const router = createRouter({
 	{ path: '/email/detail/:id', component: () => import('@/views/EmailDetail.vue') },
 	{ path: '/email/detail', component: () => import('@/views/EmailDetail.vue') },
 
-	{ path: '/devices', component: () => import('@/views/Devices.vue') },
+	{ path: '/devices/list', component: () => import('@/views/DevicesList.vue') },
+	{ path: '/devices/detail', component: () => import('@/views/DeviceDetail.vue') },
+
 	{ path: '/widgets', component: () => import('@/views/Widgets.vue') },
 	{ path: '/pos/customer-order', component: () => import('@/views/PosCustomerOrder.vue') },
 	{ path: '/pos/kitchen-order', component: () => import('@/views/PosKitchenOrder.vue') },

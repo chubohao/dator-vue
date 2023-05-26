@@ -40,7 +40,14 @@ export const useAppSidebarMenuStore = defineStore({
 		{
 			url: '/devices',
 			icon: 'fa fa-microchip',
-			text: 'Devices'
+			text: 'Devices',
+			children: [
+				{ 
+					url: '/devices/list', 
+					text: 'Devices List'
+				},
+				{ url: '/devices/detail', text: 'Devices Detail' }
+			]
 		},
 		{
 			url: '/gateways',
@@ -67,7 +74,7 @@ export const useAppSidebarMenuStore = defineStore({
 				{ url: '/pos/counter-checkout', text: 'Counter Checkout' }, 
 				{ url: '/pos/table-booking', text: 'Table Booking' }, 
 				{ url: '/pos/menu-stock', text: 'Menu Stock' }
-					]
+			]
 		},
 		{
 			url: '/ui/',

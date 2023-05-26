@@ -7,7 +7,7 @@
 	& .mailbox-toolbar {
 		padding: rem(10px);
 		display: flex;
-		
+
 		@include media-breakpoint-down(lg) {
 			position: fixed;
 			top: $app-header-height;
@@ -57,6 +57,7 @@
 		& .mailbox-sidebar {
 			max-width: rem(360px);
 			height: 100%;
+			border-right: 3px solid var(--#{$prefix}border-color);
 			
 			@include media-breakpoint-down(lg) {
 				max-width: 100%;

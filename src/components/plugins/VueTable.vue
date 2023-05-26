@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import VueTableLite from 'vue3-table-lite'
 
 export default {
