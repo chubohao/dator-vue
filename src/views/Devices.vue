@@ -277,12 +277,13 @@ export default {
 				"protocol": "",
 				"type": ""
 			},
-			
+			newUuid: "",
 			fieldNumber: 2
 		}
 	},
 	mounted() {
 		const msnry = new Masonry('[data-masonry]');
+		this.newUuid = this.getUUID();
 	},
 	created() {
 		this.emitter.on('theme-reload', (evt) => {
@@ -298,7 +299,7 @@ export default {
 					const msnry = new Masonry('[data-masonry]');
 				}, 50);
 			});
-    })
+    	})
 	}
 }
 </script>
@@ -363,7 +364,7 @@ export default {
 								<!-- BEGIN 设备 UUID -->
 								<div class="input-group mb-3">
 									<label class="input-group-text"><i class="fa fa-barcode" aria-hidden="true"></i></label>
-									<input class="form-control" placeholder="UUID" :value="getUUID()" :v-model="newDeviceVO.uuid" disabled/>
+									<input class="form-control" placeholder="UUID" :value="newUuid" :v-model="newDeviceVO.uuid" disabled/>
 								</div>
 								<!-- END 设备 UUID -->
 							</form>
@@ -454,9 +455,8 @@ export default {
 		<div class="col-lg-6 col-xl-4 mb-3" v-for="(device) in callAPI()">
 			<!-- BEGIN card -->
 			<card class="mask">
-				<div class="card-header border-0">
-				</div>
 				<card-body>
+					<div class="d-flex"></div>
 					<div class="row">
 						<!-- BEGIN 设备LOGO -->
 						<div class="col-3">
