@@ -1,76 +1,79 @@
 <script lang="ts">
-import { useAppOptionStore } from '@/stores/app-option';
+import { useAppOptionStore } from "@/stores/app-option";
+import { userVariables } from "@/stores/user-variable";
 import { useRouter, RouterLink } from 'vue-router';
-import { login } from '@/api/user'
+
+import { Form, Field } from 'vee-validate';
+import * as Yup from 'yup';
+
+import { login } from "@/api/user";
+import { reactive } from "vue";
 
 const appOption = useAppOptionStore();
 
+
 export default {
+	components: {
+		Form,
+		Field
+	},
 	mounted() {
 		appOption.appSidebarHide = true;
 		appOption.appHeaderHide = true;
 		appOption.appContentClass = 'p-0';
 	},
 	beforeUnmount() {
-		appOption.appSidebarHide = false;
-		appOption.appHeaderHide = false;
+		appOption.appSidebarHide = true;
+		appOption.appHeaderHide = true;
 		appOption.appContentClass = '';
 	},
+
 	methods: {
-		submitForm: function() {
-			var res = login(this.userForm)
-			console.log(res)
+		async onSubmit(values:JSON) {
+			const res = await login(values)
+			console.log("API RETURN: ", res)
 			if (res.status == 200){
 				this.$router.push('/');
+				userVariables.isAuthenticated = true;
+				localStorage.setItem("token", res.data.token);
+			} else {
+				this.passwordError = true;
+				console.log("error", res)
 			}
 		},
-		switchStatus() {
-			this.passwordStatus = !this.passwordStatus;
+
+		togglePasswordVisibility() {
+			this.showPassword = !this.showPassword;
 		},
 	},
+
+	computed: {
+		iconClass()  {
+			return this.showPassword ? 'bi bi-eye eye' : 'bi-eye-slash eye';
+		}
+  	},
 	data() {
+		const schema = Yup.object().shape({
+			email: Yup.string()
+                .required('Email is required')
+                .email('Email is invalid'),
+            password: Yup.string()
+                .min(6, 'Password must be at least 6 characters')
+                .required('Password is required')
+        });
+
 		return {
-		passwordStatus: true,
-		version: import.meta.env.VITE_VERSION,
-		systemName: import.meta.env.VITE_SYSTEM_NAME,
-		loading: false,
-		switchText: "password",
-		switchIcon: "eye",
-		userForm: {
-			email: "",
-			password: "",
-		},
-
-		rules: {
-			email: [
-			{
-				required: true,
-				message: "Please enter your email",
-				trigger: "blur",
-			},
-			{ pattern:/^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,min: 2, max: 15, message: "Error Email", trigger: "blur" },
-			],
-
-			password: [
-			{ 
-				required: true, 
-				message: "Please enter your password", 
-				trigger: "blur" 
-			},
-			],
-		},
+			passwordStatus: true,
+			version: import.meta.env.VITE_VERSION,
+			systemName: import.meta.env.VITE_SYSTEM_NAME,
+			loading: false,
+			showPassword: false,
+			showPasswordIcon: "eye",
+			schema,
+			passwordError: false
 		};
   	},
 	watch: {
-		passwordStatus(newValue) {
-		if (newValue) {
-			this.switchText = "password";
-			this.switchIcon = "eye";
-		} else {
-			this.switchText = "text";
-			this.switchIcon = "eye-open";
-		}
-		},
   	},
 }
 </script>
@@ -97,23 +100,38 @@ export default {
 			<div class="col-lg-5 mb-5 mb-lg-0">
 				<div class="card border-0">
 					<div class="card-body py-5 px-md-5 mx-4 text-center">
-						
 						<!-- VUE LOGIN FORM -->
-						<form v-on:submit.prevent="submitForm()" name="userInfo">
-							<div class="mb-3">
-								<input type="email" class="form-control form-control-lg fs-14px" placeholder="User Email" v-model="userForm.email"/>
+						<Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
+							<div v-if="passwordError">
+								Email or Password Error !
 							</div>
 							<div class="mb-3">
-								<input type="password" class="form-control form-control-lg fs-14px" placeholder="User Password" v-model="userForm.password"/>
+								<Field type="email" rules="required" name="email" class="form-control fs-14px" placeholder="User Email" :class="{ 'is-invalid': errors.email }"/>
+								<div class="invalid-feedback d-flex ps-2">{{errors.email}}</div>
+							</div>
+							<div class="mb-3 position-relative">
+								<Field :type="showPassword ? 'text' : 'password'" name="password" class="form-control fs-14px" placeholder="User Password" :class="{ 'is-invalid': errors.password }"/>
+								<div class="invalid-feedback d-flex ps-2">{{errors.password}}</div>
+								<i :class="iconClass" @click="togglePasswordVisibility"></i>
+							</div>
+							
+							<div class="mb-3 d-flex">
+								<Field name="acceptTerms" type="checkbox" class="form-check-input" :class="{ 'is-invalid': errors.acceptTerms }" value="Flase"/>
+								<label for="acceptTerms" class="form-check-label">&nbsp;&nbsp;Remember Me</label>
+								<div class="invalid-feedback">{{ errors.acceptTerms }}</div>
 							</div>
 							<div class="mb-3">
-								<button type="submit" class="btn btn-theme btn-lg fs-14px fw-500 d-block w-100">Sign Up</button>
+								<button type="submit" class="btn btn-theme fs-14px fw-500 d-block w-100">Sign In</button>
 							</div>
-							<div class="text-muted text-center">
-								Already have an Admin ID? <a href="/page/login">Sign In</a>
+							<div class="d-flex">
+								<a href="/page/login">Forget Your Dator ID or Password ?</a>
+							</div> 
+							<div class="d-flex">
+								Don’t have an Dator ID ? &nbsp;&nbsp;<a href="">Create One</a>
 							</div>
-						</form>
+						</Form>
 					</div>
+					
 
 					<!-- Register buttons -->
 					<div class="text-center m-0 pb-2">
@@ -145,52 +163,27 @@ export default {
 </template>
 
 <style>
-.login-title {
-  color: #000;
-  text-align: center;
-  margin-bottom: 40px;
-}
 
-.el-form-item {
-  border: 1px solid hsla(0, 0%, 100%, 0.1);
-  background: rgba(0, 0, 0, 0.1);
-  color: #454545;
-  border-radius: 5px;
-  margin-bottom: 25px;
-}
-
-.login-form input{
-  background: transparent !important;
-  outline: none;
-  border: none;
-  padding-left: 30px;
-  color: #000;
-  height: 30px;
-}
-
-.el-input__wrapper  {
-  background: transparent !important;
-  box-shadow: none;
-}
-
-.login-user {
-  position: absolute;
-  font-size: 19px;
-  color: #889aa4;
-  left: 5px;
-  top: 8px;
-}
+.form-control {
+    border-radius: 4px;
+  }
 
 .eye {
   position: absolute;
-  right: 18px;
-  top: 10px;
+  right: 10px;
+  top: 5px;
   cursor: pointer;
   font-size: 16px;
 }
 
-.el-button {
-  width: 100%;
+.form-control.is-invalid {
+	border: 2px solid lightgray; /* 自定义边框样式 */
+	background-image: none;
 }
+
+.invalid-feedback{
+	color: red;
+}
+
 
 </style>

@@ -2,6 +2,7 @@
 import { getCurrentInstance, onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { useAppOptionStore } from '@/stores/app-option';
+import { userVariables } from '@/stores/user-variable';
 import { ProgressFinisher, useProgress } from '@marcoschulte/vue3-progress';
 import AppSidebar from '@/components/app/Sidebar.vue';
 import AppHeader from '@/components/app/Header.vue';
@@ -9,20 +10,24 @@ import AppFooter from '@/components/app/Footer.vue';
 import AppThemePanel from '@/components/app/ThemePanel.vue';
 import router from '@/router';
 
+
 const appOption = useAppOptionStore();
 const internalInstance = getCurrentInstance();
 
 const progresses = [] as ProgressFinisher[];
 
-router.beforeEach(async (to, from) => {
+router.beforeEach((to, from, next) => {
+	if (to.path !== "/page/login" && !userVariables.isAuthenticated) {
+		next({ path: "/page/login"});
+	} else {
+		next();
+	}
 	progresses.push(useProgress().start());
 	appOption.appSidebarMobileToggled = false;
 	document.body.scrollTop = 0;
   	document.documentElement.scrollTop = 0;
-})
-
-router.afterEach(async (to, from) => {
 	progresses.pop()?.finish();
+
 })
 
 </script>

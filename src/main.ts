@@ -15,6 +15,7 @@ import 'bootstrap';
 import './scss/styles.scss';
 
 
+
 import App from './App.vue';
 import router from './router';
 

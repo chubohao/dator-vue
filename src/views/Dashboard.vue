@@ -1,5 +1,6 @@
 <script lang="ts">
 import { useAppVariableStore } from '@/stores/app-variable';
+import { useAppOptionStore } from '@/stores/app-option';
 import apexchart from '@/components/plugins/Apexcharts.vue';
 import highlightjs from '@/components/plugins/Highlightjs.vue';
 import navscrollto from '@/components/app/NavScrollTo.vue';
@@ -9,6 +10,7 @@ import 'jsvectormap/dist/maps/world.js';
 import 'jsvectormap/dist/css/jsvectormap.min.css';
 
 const appVariable = useAppVariableStore();
+const appOption = useAppOptionStore();
 
 export default {
 	components: {
@@ -196,6 +198,9 @@ export default {
 	},
 	mounted() {
 		this.renderMap();
+		appOption.appSidebarHide = false;
+		appOption.appHeaderHide = false;
+		appOption.appContentClass = 'p-0';
 	},
 	created() {
 		this.emitter.on('theme-reload', (evt) => {

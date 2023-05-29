@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import Vue3SimpleTypeahead from 'vue3-simple-typeahead';
 import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css';
 

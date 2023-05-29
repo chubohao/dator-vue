@@ -1,20 +1,18 @@
 import request from '@/api/request'
 
-/*
-export function login(data:any){
+export function login(data:JSON){
 	return request({
-		url:'/api/course/mostNew',
-		method:"post",
+		url: '/login',
+		method: "post",
 		data
 	})
 }
-*/
 
-export function login(data:any){
-    console.log(data);
-	return {
-		status:200,
-        msg: "ok",
-        token: "123123"
-	}
+export function register(data:JSON){
+    console.log("email+password:", data);
+	return request({
+		url: '/register',
+		method: "post",
+		data
+	})
 }

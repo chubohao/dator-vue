@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import VueTagsInput from "@sipec/vue3-tags-input";
 
 export default {

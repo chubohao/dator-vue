@@ -1,24 +1,25 @@
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import axios from 'axios';
 
-// 创建axios对象
-const service = axios.create();
-
-
-// 请求拦截器
-service.interceptors.request.use(config => {
-  return config;
-}, error => {
-  Promise.reject(error);
+const service: AxiosInstance = axios.create({
+  baseURL: "/api",
+  timeout: 100, 
+  headers: { "Content-Type": "application/json;charset=UTF-8" }
 });
 
-
-//3 响应拦截器
-service.interceptors.response.use(response => {
-  //判断code码
-  return response.data;
-},error => {
-  return Promise.reject(error);
+service.interceptors.request.use((config: AxiosRequestConfig) => {
+     return config;
+    }, (error) => {
+    return Promise.reject(error)
 });
 
+service.interceptors.response.use((response: AxiosResponse) => {
+        const data = response.data;
+        return data;
+    },
+    (err) => {
+        return Promise.reject(err.response);
+    }
+);
 
 export default service;

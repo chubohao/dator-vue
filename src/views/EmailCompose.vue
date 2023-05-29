@@ -2,7 +2,7 @@
 import { useAppOptionStore } from '@/stores/app-option';
 import { onBeforeUnmount } from 'vue';
 import { RouterLink } from 'vue-router';
-import quillEditor from '@/components/plugins/quilleditor.vue';
+import quillEditor from '@/components/plugins/QuillEditor.vue';
 import tagsInput from '@/components/plugins/TagsInput.vue';
 
 const appOption = useAppOptionStore();
