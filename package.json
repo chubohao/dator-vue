@@ -60,6 +60,7 @@
     "photoswipe": "^5.3.7",
     "picmo": "^5.8.1",
     "pinia": "^2.0.33",
+    "tencentcloud-sdk-nodejs": "^4.0.609",
     "vee-validate": "^4.5.8",
     "vue": "^3.3.0",
     "vue-axios": "^3.5.2",

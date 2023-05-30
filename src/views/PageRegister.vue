@@ -1,18 +1,18 @@
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { useAppOptionStore } from "@/stores/app-option";
 import { userVariables } from "@/stores/user-variable";
 import { useRouter, RouterLink } from 'vue-router';
-
 import { Form, Field } from 'vee-validate';
 import * as Yup from 'yup';
-
 import { login } from "@/api/user";
 import { reactive } from "vue";
 
 const appOption = useAppOptionStore();
+const userVariable = userVariables()
 
 
-export default {
+export default defineComponent({
 	components: {
 		Form,
 		Field
@@ -30,11 +30,12 @@ export default {
 
 	methods: {
 		async onSubmit(values:JSON) {
+			console.log(values)
 			const res = await login(values)
 			console.log("API RETURN: ", res)
 			if (res.status == 200){
 				this.$router.push('/');
-				userVariables.isAuthenticated = true;
+				userVariable.toAuthenticated();
 				localStorage.setItem("token", res.data.token);
 			} else {
 				this.passwordError = true;
@@ -45,10 +46,21 @@ export default {
 		togglePasswordVisibility() {
 			this.showPassword = !this.showPassword;
 		},
+
+		showCaptcha(values:JSON) {
+			const captcha = new TencentCaptcha('198579184', (res:any) => {
+				if (res.ret === 0) {
+					console.log('验证码验证成功');
+					this.onSubmit(values)
+				}
+			});
+			captcha.langFun();
+			captcha.show();
+		},
 	},
 
 	computed: {
-		iconClass()  {
+		iconClass():any  {
 			return this.showPassword ? 'bi bi-eye eye' : 'bi-eye-slash eye';
 		}
   	},
@@ -68,6 +80,7 @@ export default {
 			.required('User name is required')
         });
 
+
 		return {
 			passwordStatus: true,
 			version: import.meta.env.VITE_VERSION,
@@ -81,7 +94,7 @@ export default {
   	},
 	watch: {
   	},
-}
+});
 </script>
 <template>
 	<!-- BEGIN login -->
@@ -107,7 +120,7 @@ export default {
 				<div class="card border-0">
 					<div class="card-body py-5 px-md-5 mx-4 text-center">
 						<!-- VUE LOGIN FORM -->
-						<Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
+						<Form @submit="showCaptcha" :validation-schema="schema" v-slot="{ errors }">
 							<div v-if="passwordError">
 								Email or Password Error !
 							</div>
