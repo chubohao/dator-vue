@@ -17,9 +17,10 @@ const internalInstance = getCurrentInstance();
 const progresses = [] as ProgressFinisher[];
 
 router.beforeEach((to, from, next) => {
-	if (to.path !== "/page/login" && !userVariables.isAuthenticated) {
+	if (to.path !== "/page/login" && to.path !== "/page/register" && !userVariables.isAuthenticated) {
 		next({ path: "/page/login"});
-	} else {
+	}
+	else {
 		next();
 	}
 	progresses.push(useProgress().start());

@@ -127,7 +127,7 @@ export default {
 								<a href="/page/login">Forget Your Dator ID or Password ?</a>
 							</div> 
 							<div class="d-flex">
-								Don’t have an Dator ID ? &nbsp;&nbsp;<a href="">Create One</a>
+								Don’t have an Dator ID ? &nbsp;&nbsp;<a href="/page/register">Create One</a>
 							</div>
 						</Form>
 					</div>
