@@ -7,6 +7,14 @@ import { RouterLink } from 'vue-router';
 const appOption = useAppOptionStore();
 
 export default {
+	mounted() {
+		appOption.appContentFullHeight = true;
+		appOption.appContentClass = 'p-0';
+	},
+	beforeUnmount() {
+		appOption.appContentFullHeight = false;
+		appOption.appContentClass = '';
+	},
 	data() {
 		const mailData = [{
 				id: 1,
@@ -148,14 +156,6 @@ export default {
 	},
 	components: {
 		vueTable: vueTable
-	},
-	mounted() {
-		appOption.appContentFullHeight = true;
-		appOption.appContentClass = 'p-0';
-	},
-	beforeUnmount() {
-		appOption.appContentFullHeight = false;
-		appOption.appContentClass = '';
 	}
 }
 </script>

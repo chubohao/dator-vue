@@ -1,5 +1,6 @@
 <script lang="ts">
 import { useAppVariableStore } from '@/stores/app-variable';
+import { useAppOptionStore } from '@/stores/app-option';
 import chartjs from '@/components/plugins/Chartjs.vue';
 import datepicker from 'vue3-datepicker';
 import Masonry from 'masonry-layout';
@@ -7,8 +8,14 @@ import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
 let appVariable = useAppVariableStore();
+const appOption = useAppOptionStore();
 
 export default {
+	beforeCreate() {
+		appOption.appHeaderHide = false;
+		appOption.appSidebarHide = false;
+		appOption.appContentClass = 'p-2';
+	},
 	components: {
 		chartjs: chartjs,
 		datepicker: datepicker
@@ -306,10 +313,6 @@ export default {
 <template>
 	<!-- BEGIN HEADER -->
 	<div class="d-flex align-items-center mb-3">
-		<div class="btn btn-primary me-2"  data-bs-toggle="modal" data-bs-target="#add">
-			Add New Device
-		</div>
-
 		<!-- BEGIN 添加设备模态框 -->
 		<div class="modal modal-lg" id="add">
 			<div class="modal-dialog">
@@ -435,14 +438,23 @@ export default {
 				<i class="fa fa-fw fa-caret-down me-n1"></i>
 			</label>
 		</div>
-		<div class="w-30">
+		<div class="">
 			<select class="form-select" aria-label="Default select example">
-			<option selected>Status</option>
-			<option value="0">All</option>
-			<option value="1">Online</option>
-			<option value="2">Offline</option>
-			<option value="3">Abnormal</option>
-		</select>
+				<option selected>Status</option>
+				<option value="0">All</option>
+				<option value="1">Online</option>
+				<option value="2">Offline</option>
+				<option value="3">Abnormal</option>
+			</select>
+		</div>
+
+		<div class="btn btn-theme me-auto ms-2"  data-bs-toggle="modal" data-bs-target="#add">
+			<i class="bi bi-search"></i>
+		</div>
+
+		<div class="btn btn-theme d-flex"  data-bs-toggle="modal" data-bs-target="#add">
+			<i class="bi bi-plus-square"></i>
+			<span class="ms-2">Add</span>
 		</div>
 		
 		<!-- <span class="ms-3">compared to {{ getPrevDay() }}</span>-->

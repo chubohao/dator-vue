@@ -1,4 +1,5 @@
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { useAppVariableStore } from '@/stores/app-variable';
 import { useAppOptionStore } from '@/stores/app-option';
 import apexchart from '@/components/plugins/Apexcharts.vue';
@@ -12,7 +13,7 @@ import 'jsvectormap/dist/css/jsvectormap.min.css';
 const appVariable = useAppVariableStore();
 const appOption = useAppOptionStore();
 
-export default {
+export default defineComponent({
 	components: {
 		apexchart: apexchart,
 		highlightjs: highlightjs,
@@ -35,6 +36,7 @@ export default {
 			}
 		}
 	},
+
 	methods: {
 		getChartOptions() {
 			return {
@@ -196,22 +198,29 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.renderMap();
-		appOption.appSidebarHide = false;
-		appOption.appHeaderHide = false;
-		appOption.appContentClass = 'p-0';
-	},
+
 	created() {
 		this.emitter.on('theme-reload', (evt) => {
 			this.renderComponent = false;
-			
 			this.$nextTick(() => {
 				this.chart.options = this.getChartOptions();
 			});
     })
-	}
-}
+	},
+
+	beforeCreate() {
+		appOption.appSidebarHide = false;
+		appOption.appHeaderHide = false;
+		appOption.appContentClass = 'p-2';
+	},
+
+	mounted() {
+		this.renderMap();
+	},
+
+	
+});
+
 </script>
 <template>
 	<h1 class="page-header mb-3">

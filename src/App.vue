@@ -48,7 +48,6 @@ router.afterEach(() => {
 		'app-boxed-layout': appOption.appBoxedLayout,
 		'app-footer-fixed': appOption.appFooterFixed,
 		}">
-		<vue3-progress-bar />
 		<!-- 导航 -->
 		<app-header v-if="!appOption.appHeaderHide" />
 

@@ -15,15 +15,11 @@ export default defineComponent({
 		Form,
 		Field
 	},
-	mounted() {
+
+	beforeCreate() {
 		appOption.appSidebarHide = true;
 		appOption.appHeaderHide = true;
 		appOption.appContentClass = 'p-0';
-	},
-	beforeUnmount() {
-		appOption.appSidebarHide = true;
-		appOption.appHeaderHide = true;
-		appOption.appContentClass = '';
 	},
 
 	methods: {
@@ -37,7 +33,6 @@ export default defineComponent({
 					this.passwordError = true;
 				}
 			} catch (error) {
-				// 处理捕获到的错误
 				console.log(error)
 			}
 		},
