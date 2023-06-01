@@ -14,6 +14,7 @@ const appVariable = useAppVariableStore();
 const appOption = useAppOptionStore();
 
 export default defineComponent({
+	
 	components: {
 		apexchart: apexchart,
 		highlightjs: highlightjs,
@@ -21,6 +22,13 @@ export default defineComponent({
 		googleMap: GoogleMap,
 		googleMapMarker: Marker
 	},
+
+	beforeCreate() {
+		appOption.appSidebarHide = false;
+		appOption.appHeaderHide = false;
+		appOption.appContentClass = 'p-3';
+	},
+
 	data() {
 		return {
 			renderComponent: true,
@@ -206,12 +214,6 @@ export default defineComponent({
 				this.chart.options = this.getChartOptions();
 			});
     })
-	},
-
-	beforeCreate() {
-		appOption.appSidebarHide = false;
-		appOption.appHeaderHide = false;
-		appOption.appContentClass = 'p-2';
 	},
 
 	mounted() {

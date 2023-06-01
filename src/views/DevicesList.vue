@@ -14,7 +14,7 @@ export default {
 	beforeCreate() {
 		appOption.appHeaderHide = false;
 		appOption.appSidebarHide = false;
-		appOption.appContentClass = 'p-2';
+		appOption.appContentClass = 'p-3';
 	},
 	components: {
 		chartjs: chartjs,
@@ -215,7 +215,7 @@ export default {
 					"name": "LoRa",
 					"uuid": "96F5E825-9141-42E8-8EE5-B0C2D07238E4",
 					"status": 0,
-					"img": "/assets/img/devices/device1.svg",
+					"img": "/assets/img/devices/D1.png",
 					"location": "Duisburg",
 					"dataVolume": "80",
 					"trend": "+5"
@@ -224,7 +224,7 @@ export default {
 					"name": "Sensor",
 					"uuid": "FC4372C7-F49F-4F33-9BBA-8DF0CDA19A52",
 					"status": 1,
-					"img": "/assets/img/devices/device2.svg",
+					"img": "/assets/img/devices/D2.png",
 					"location": "Düsseldorf",
 					"dataVolume": "10",
 					"trend": "+1"
@@ -233,7 +233,7 @@ export default {
 					"name": "Gateway",
 					"uuid": "ED96EDB3-7FA9-4F02-B699-104AB0F5F857",
 					"status": 1,
-					"img": "/assets/img/devices/device3.svg",
+					"img": "/assets/img/devices/D3.png",
 					"location": "Beijing",
 					"dataVolume": "100.9",
 					"trend": "+101"
@@ -242,7 +242,7 @@ export default {
 					"name": "NB-IoT",
 					"uuid": "4190B276-05CB-40DC-8628-01F8336927C0",
 					"status": 3,
-					"img": "/assets/img/devices/device4.svg",
+					"img": "/assets/img/devices/D4.png",
 					"location": "Shanghai",
 					"dataVolume": "60.01",
 					"trend": "+200"
@@ -311,10 +311,8 @@ export default {
 }
 </script>
 <template>
-	<!-- BEGIN HEADER -->
-	<div class="d-flex align-items-center mb-3">
-		<!-- BEGIN 添加设备模态框 -->
-		<div class="modal modal-lg" id="add">
+	<!-- BEG 添加设备模态框 -->
+	<div class="modal modal-lg" id="add">
 			<div class="modal-dialog">
 				<div class="modal-content px-4 py-2">
 					<!-- 模态框头部 -->
@@ -426,20 +424,26 @@ export default {
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END 添加设备模态框 -->
+	</div>
+	<!-- END 添加设备模态框 -->
 
+	<!-- BEG 搜索条件和添加按钮 -->
+	<form class="d-flex align-items-center mb-3">
+		<!-- BEG 添加时间 -->
 		<div class="btn btn-default d-flex align-items-center me-2">
 			<label for="datepicker" class="">
 				<i class="fa fa-fw fa-calendar"></i>
 			</label>
-			<datepicker id="datepicker" class="bg-none text-reset shadow-none border-0 ps-2 w-100px p-0 outline-none" @update:modelValue="updateDate" v-model="picked" />
+			<datepicker id="datepicker" class="bg-none text-reset shadow-none border-0 outline-none ps-2 w-100px" @update:modelValue="updateDate" v-model="picked" />
 			<label for="datepicker" class="">
 				<i class="fa fa-fw fa-caret-down me-n1"></i>
 			</label>
 		</div>
-		<div class="">
-			<select class="form-select" aria-label="Default select example">
+		<!-- END 添加时间 -->
+
+		<!-- END 设备状态 -->
+		<div class="d-flex">
+			<select class="form-select">
 				<option selected>Status</option>
 				<option value="0">All</option>
 				<option value="1">Online</option>
@@ -447,10 +451,10 @@ export default {
 				<option value="3">Abnormal</option>
 			</select>
 		</div>
-
-		<div class="btn btn-theme me-auto ms-2"  data-bs-toggle="modal" data-bs-target="#add">
+		<!-- END 设备状态 -->
+		<button type="button" class="btn btn-default d-flex ms-2 me-auto">
 			<i class="bi bi-search"></i>
-		</div>
+		</button>
 
 		<div class="btn btn-theme d-flex"  data-bs-toggle="modal" data-bs-target="#add">
 			<i class="bi bi-plus-square"></i>
@@ -458,8 +462,8 @@ export default {
 		</div>
 		
 		<!-- <span class="ms-3">compared to {{ getPrevDay() }}</span>-->
-	</div>
-	<!-- END HEADER -->
+	</form>
+	<!-- END 搜索条件和添加按钮 -->
 
 	<!-- BEGIN BODY -->
 	<div class="row" data-masonry='{"percentPosition": true }' v-if="renderComponent">
@@ -470,9 +474,9 @@ export default {
 				<card-body>
 					<div class="d-flex"></div>
 					<div class="row">
-						<!-- BEGIN 设备LOGO -->
+						<!-- BEG 设备LOGO -->
 						<div class="col-3">
-							<img :src="device.img" alt="" height="60">
+							<img :src="device.img" alt="" height="83">
 						</div>
 						<!-- END 设备LOGO -->
 						
@@ -516,7 +520,8 @@ export default {
 
 <style>
 .mask {
-	transition: transform .5s;
+	transition: transform .3s;
+	border: none;
 }
 .mask:hover {
 	transform: scale(1.05);
