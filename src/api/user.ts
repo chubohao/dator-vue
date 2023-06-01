@@ -1,6 +1,6 @@
 import request from '@/api/request'
 
-export function login(data:JSON){
+export function login(data:any){
 	return request({
 		url: '/login',
 		method: "post",
@@ -8,10 +8,9 @@ export function login(data:JSON){
 	})
 }
 
-export function register(data:JSON){
-    console.log("email+password:", data);
+export function register(data:any){
 	return request({
-		url: '/register',
+		url: '/registerUser',
 		method: "post",
 		data
 	})

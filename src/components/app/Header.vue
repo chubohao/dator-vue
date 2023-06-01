@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAppOptionStore } from '@/stores/app-option';
+import { useAuthStore } from '@/stores/user-auth';
 import { RouterLink } from 'vue-router';
 
 const appOption = useAppOptionStore();
+const userAuth = useAuthStore();
 const notificationData = [{
 	icon: 'fa fa-receipt fa-lg fa-fw text-success',
 	title: 'Your store has a new order for 2 items totaling $1,299.00',
@@ -27,14 +29,18 @@ function toggleAppSidebarMinify() {
 function toggleAppSidebarMobileToggled() {
 	appOption.appSidebarMobileToggled = !appOption.appSidebarMobileToggled;
 }
-function toggleAppHeaderSearch(event) {
+function toggleAppHeaderSearch(event:any) {
 	event.preventDefault();
 	
 	appOption.appHeaderSearchToggled = !appOption.appHeaderSearchToggled;
 }
-function checkForm(event) {
+function checkForm(event:any) {
 	event.preventDefault();
 	this.$router.push({ path: '/extra/search' })
+};
+
+function logout() {
+	userAuth.logout()
 }
 </script>
 <template>
@@ -108,15 +114,15 @@ function checkForm(event) {
 					<div class="menu-img online">
 						<img src="/assets/img/user/cat.jpg" alt="" class="ms-100 mh-100 rounded-circle">
 					</div>
-					<div class="menu-text">bohao.chu@qq.com</div>
+					<div class="menu-text">{{userAuth.user?.name}}</div>
 				</a>
-				<div class="dropdown-menu dropdown-menu-end me-lg-3">
+				<div class="dropdown-menu dropdown-menu-end">
 					<RouterLink to="/profile" class="dropdown-item d-flex align-items-center">Edit Profile <i class="fa fa-user-circle fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
 					<RouterLink to="/email/inbox" class="dropdown-item d-flex align-items-center">Inbox <i class="fa fa-envelope fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
 					<RouterLink to="/calendar" class="dropdown-item d-flex align-items-center">Calendar <i class="fa fa-calendar-alt fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
 					<RouterLink to="/settings" class="dropdown-item d-flex align-items-center">Setting <i class="fa fa-wrench fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
 					<div class="dropdown-divider"></div>
-					<RouterLink to="/page/login" class="dropdown-item d-flex align-items-center">Log Out <i class="fa fa-toggle-off fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
+					<RouterLink @click="logout" to="/login" class="dropdown-item d-flex align-items-center">Log Out <i class="fa fa-toggle-off fa-fw ms-auto text-gray-400 fs-16px"></i></RouterLink>
 				</div>
 			</div>
 		</div>

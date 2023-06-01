@@ -19,15 +19,14 @@ export default defineConfig({
 	},
 
   server: {
+    host: "0.0.0.0",
     port: 8991,
-    cors: true, // 默认启用并允许任何源
-    open: true, // 在服务器启动时自动在浏览器中打开应用程序
-
+    cors: true,
+    open: true,
     proxy: {
       '/api': {
-        target: 'http://bohao.de:8888',
+        target: 'http://127.0.0.1:8888',
         changeOrigin: true
-        // rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

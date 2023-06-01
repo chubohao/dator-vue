@@ -1,16 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useAppOptionStore } from "@/stores/app-option";
-import { userVariables } from "@/stores/user-variable";
-import { useRouter, RouterLink } from 'vue-router';
+import { useAuthStore } from '@/stores/user-auth';
 import { Form, Field } from 'vee-validate';
 import * as Yup from 'yup';
-import { login } from "@/api/user";
-import { reactive } from "vue";
+import { register } from "@/api/user";
 
 const appOption = useAppOptionStore();
-const userVariable = userVariables()
-
+const userAuth = useAuthStore();
 
 export default defineComponent({
 	components: {
@@ -29,29 +26,30 @@ export default defineComponent({
 	},
 
 	methods: {
-		async onSubmit(values:JSON) {
-			console.log(values)
-			const res = await login(values)
-			console.log("API RETURN: ", res)
-			if (res.status == 200){
-				this.$router.push('/');
-				userVariable.toAuthenticated();
-				localStorage.setItem("token", res.data.token);
-			} else {
-				this.passwordError = true;
-				console.log("error", res)
-			}
+		async onSubmit() {
+			try {
+				const res = await register(this.form)
+				if (res.status == 0){
+					userAuth.storeRegisterInfo(this.form)
+					this.$router.push('/login');
+				} else if (res.status == 2){
+					this.userInfoError = true;
+				} else {
+					this.networkError = true;
+				}
+			} catch (error) {
+					console.log(error)
+				}
 		},
 
 		togglePasswordVisibility() {
 			this.showPassword = !this.showPassword;
 		},
 
-		showCaptcha(values:JSON) {
+		showCaptcha() {
 			const captcha = new TencentCaptcha('198579184', (res:any) => {
 				if (res.ret === 0) {
-					console.log('验证码验证成功');
-					this.onSubmit(values)
+					this.onSubmit()
 				}
 			});
 			captcha.langFun();
@@ -89,7 +87,14 @@ export default defineComponent({
 			showPassword: false,
 			showPasswordIcon: "eye",
 			schema,
-			passwordError: false
+			networkError: false,
+			userInfoError: false,
+			form: {
+				email: "",
+				password: "",
+				country: "DE",
+				name: ""
+			}
 		};
   	},
 	watch: {
@@ -121,26 +126,29 @@ export default defineComponent({
 					<div class="card-body py-5 px-md-5 mx-4 text-center">
 						<!-- VUE LOGIN FORM -->
 						<Form @submit="showCaptcha" :validation-schema="schema" v-slot="{ errors }">
-							<div v-if="passwordError">
-								Email or Password Error !
+							<div v-if="networkError" class="d-flex mb-2">
+								<div class="text-red">Sorry Server Error.</div>
+							</div>
+
+							<div v-if="userInfoError" class="d-flex mb-2">
+								<div class="text-red">Email already exists, please use new email.</div>
 							</div>
 
 							<!-- EMAIL -->
 							<div class="mb-3">
-								<Field type="email" name="email" class="form-control fs-14px" placeholder="User Email" :class="{ 'is-invalid': errors.email }"/>
+								<Field type="email" name="email" v-model="form.email" class="form-control fs-14px" placeholder="User Email" :class="{ 'is-invalid': errors.email }"/>
 								<div class="invalid-feedback d-flex ps-2">{{errors.email}}</div>
 							</div>
 
 							<!-- NAME -->
 							<div class="mb-3">
-								<Field type="text" name="name" class="form-control fs-14px" placeholder="User Name" :class="{ 'is-invalid': errors.name }"/>
+								<Field type="text" name="name" v-model="form.name" class="form-control fs-14px" placeholder="User Name" :class="{ 'is-invalid': errors.name }"/>
 								<div class="invalid-feedback d-flex ps-2">{{errors.name}}</div>
 							</div>
 
 							<!-- COUNTRY -->
 							<div class="mb-3">
-								<select class="form-select form-control" aria-label="Default select example">
-									<option value="DE" selected>Select Country</option>
+								<select class="form-select form-control"  v-model="form.country" >
 									<option value="CN">China</option>
 									<option value="DE">Germany</option>
 								</select>
@@ -148,7 +156,7 @@ export default defineComponent({
 							
 							<!-- PASSWORD -->
 							<div class="mb-3 position-relative">
-								<Field :type="showPassword ? 'text' : 'password'" name="password" class="form-control fs-14px" placeholder="User Password" :class="{ 'is-invalid': errors.password }"/>
+								<Field :type="showPassword ? 'text' : 'password'" v-model="form.password" name="password" class="form-control fs-14px" placeholder="User Password" :class="{ 'is-invalid': errors.password }"/>
 								<div class="invalid-feedback d-flex ps-2">{{errors.password}}</div>
 								<i :class="iconClass" @click="togglePasswordVisibility"></i>
 							</div>
@@ -166,7 +174,7 @@ export default defineComponent({
 							</div>
 
 							<div class="d-flex">
-								Already have a Dator ID ? &nbsp;&nbsp;<a href="/page/login">Sign In</a>
+								Already have a Dator ID ? &nbsp;&nbsp;<a href="/login">Sign In</a>
 							</div>
 						</Form>
 					</div>

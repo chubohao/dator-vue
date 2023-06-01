@@ -3,6 +3,9 @@ import { createPinia } from 'pinia';
 import { Vue3ProgressPlugin } from '@marcoschulte/vue3-progress';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import mitt from 'mitt';
+import { useAuthStore } from '@/stores/user-auth';
+
+
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import '@marcoschulte/vue3-progress/dist/index.css';
 import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
@@ -44,4 +47,8 @@ app.use(Vue3ProgressPlugin);
 app.use(PerfectScrollbar);
 
 app.config.globalProperties.emitter = emitter;
+
+const authStore = useAuthStore();
+authStore.checkAuth();
+
 app.mount('#app');

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { getCurrentInstance, onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { useAppOptionStore } from '@/stores/app-option';
-import { userVariables } from '@/stores/user-variable';
-import { ProgressFinisher, useProgress } from '@marcoschulte/vue3-progress';
+import { useAuthStore } from '@/stores/user-auth';
+import NProgress from 'nprogress';
 import AppSidebar from '@/components/app/Sidebar.vue';
 import AppHeader from '@/components/app/Header.vue';
 import AppFooter from '@/components/app/Footer.vue';
@@ -12,24 +11,25 @@ import router from '@/router';
 
 
 const appOption = useAppOptionStore();
-const internalInstance = getCurrentInstance();
-
-const progresses = [] as ProgressFinisher[];
+const userAuth = useAuthStore()
 
 router.beforeEach((to, from, next) => {
-	if (to.path !== "/page/login" && to.path !== "/page/register" && !userVariables.isAuthenticated) {
-		next({ path: "/page/login"});
+	if (to.path !== "/login" && to.path !== "/register" && !userAuth.isAuthenticated) {
+		next({ path: "/login"});
 	}
 	else {
+		userAuth.resetLogoutTimer();
 		next();
+		NProgress.start();
+		appOption.appSidebarMobileToggled = false;
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
 	}
-	progresses.push(useProgress().start());
-	appOption.appSidebarMobileToggled = false;
-	document.body.scrollTop = 0;
-  	document.documentElement.scrollTop = 0;
-	progresses.pop()?.finish();
+});
 
-})
+router.afterEach(() => {
+	NProgress.done();
+});
 
 </script>
 
