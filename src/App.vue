@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import { useAppOptionStore } from '@/stores/app-option';
 import { useAuthStore } from '@/stores/user-auth';
 import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 import AppSidebar from '@/components/app/Sidebar.vue';
 import AppHeader from '@/components/app/Header.vue';
 import AppFooter from '@/components/app/Footer.vue';
@@ -19,8 +20,8 @@ router.beforeEach((to, from, next) => {
 	}
 	else {
 		userAuth.resetLogoutTimer();
-		next();
 		NProgress.start();
+		next();
 		appOption.appSidebarMobileToggled = false;
 		document.body.scrollTop = 0;
 		document.documentElement.scrollTop = 0;
