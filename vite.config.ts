@@ -25,7 +25,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://bohao.de:8888',
+        target: 'http://127.0.0.1:8888',
         changeOrigin: true
       }
     }

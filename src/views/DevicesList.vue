@@ -6,6 +6,7 @@ import datepicker from 'vue3-datepicker';
 import Masonry from 'masonry-layout';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { insertDevice } from "@/api/user";
 
 let appVariable = useAppVariableStore();
 const appOption = useAppOptionStore();
@@ -21,6 +22,26 @@ export default {
 		datepicker: datepicker
 	},
 	methods: {
+		resetForm() {
+			this.deviceVO = {
+				"name": "",
+				"location": "",
+				"protocol": "HTTP",
+				"type": "Hardware Divce",
+				"fields": ""
+			},
+			this.fieldList = [
+				{"name": "", "type": "String", "desc": ""}
+			]
+		},
+		addField() {
+			this.fieldList.push(
+				{"name": "", "type": "String", "desc": ""}
+			)
+		},
+		deleteField(index:any){
+			this.fieldList.splice(index, 1)
+		},
 		getPrevDay() {
 			return this.prevDay;
 		},
@@ -30,166 +51,6 @@ export default {
 		},
 		getSelectedDay() {
 			return this.selectedDay;
-		},
-		getChart1Data() {
-			return {
-				labels: ['', '4am', '8am', '12pm', '4pm', '8pm', this.nextDay],
-				datasets: [{
-					color: appVariable.color.theme,
-					backgroundColor: 'transparent',
-					borderColor: appVariable.color.theme,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.theme,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 601.5, 220]
-				},{
-					color: appVariable.color.gray300,
-					backgroundColor: 'rgba('+ appVariable.color.gray300Rgb + ', .2)',
-					borderColor: appVariable.color.gray300,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.gray300,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 500, 120, 0, 0, 0]
-				}]
-			};
-		},
-		getChart2Data() {
-			return {
-				labels: ['', '4am', '8am', '12pm', '4pm', '8pm', this.nextDay],
-				datasets: [{
-					color: appVariable.color.theme,
-					backgroundColor: 'transparent',
-					borderColor: appVariable.color.theme,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.theme,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 20, 50, 100, 120]
-				},{
-					color: appVariable.color.gray300,
-					backgroundColor: 'rgba('+ appVariable.color.gray300Rgb + ', .2)',
-					borderColor: appVariable.color.gray300,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.gray300,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 30, 44, 130, 34, 15, 43, 22]
-				}]
-			};
-		},
-		getChart3Data() {
-			return {
-				labels: ['', '4am', '8am', '12pm', '4pm', '8pm', this.nextDay],
-				datasets: [{
-					color: appVariable.color.indigo,
-					backgroundColor: 'transparent',
-					borderColor: appVariable.color.indigo,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.indigo,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 5, 18, 9]
-				},{
-					color: appVariable.color.theme,
-					backgroundColor: 'rgba('+ appVariable.color.theme +', .2)',
-					borderColor: appVariable.color.theme,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.theme,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 10, 26, 13]
-				}]
-			};
-		},
-		getChart4Data() {
-			return {
-				labels: ['', '4am', '8am', '12pm', '4pm', '8pm', this.nextDay],
-				datasets: [{
-					color: appVariable.color.theme,
-					backgroundColor: 'transparent',
-					borderColor: appVariable.color.theme,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.theme,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 24, 39]
-				},{
-					color: appVariable.color.gray300,
-					backgroundColor: 'rgba('+ appVariable.color.gray300Rgb + ', .2)',
-					borderColor: appVariable.color.gray300,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.gray300,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 28, 35, 23, 0, 0]
-				}]
-			};
-		},
-		getChart5Data() {
-			return {
-				labels: ['', '4am', '8am', '12pm', '4pm', '8pm', this.nextDay],
-				datasets: [{
-					color: appVariable.color.theme,
-					backgroundColor: 'transparent',
-					borderColor: appVariable.color.theme,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.theme,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 12, 5]
-				},{
-					color: appVariable.color.gray300,
-					backgroundColor: 'rgba('+ appVariable.color.gray300Rgb + ', .2)',
-					borderColor: appVariable.color.gray300,
-					borderWidth: 2,
-					pointBackgroundColor: appVariable.color.componentBg,
-					pointBorderWidth: 2,
-					pointRadius: 4,
-					pointHoverBackgroundColor: appVariable.color.componentBg,
-					pointHoverBorderColor: appVariable.color.gray300,
-					pointHoverRadius: 6,
-					pointHoverBorderWidth: 2,
-					data: [0, 0, 0, 10, 4, 2, 0, 0]
-				}]
-			};
 		},
 		getStatuOfDevice(status:any) {
 			if (status == 0){
@@ -204,12 +65,19 @@ export default {
 		getUUID(){
 			return uuidv4().toUpperCase();
 		},
-		submitForm(){
-			this.$emit('submit', this.newDeviceVO)
-			console.log(this.newDeviceVO)
+		async onSubmit() {
+			const fields = JSON.stringify(this.fieldList)
+			this.deviceVO.fields = fields;
+			try {
+				const res = await insertDevice(this.deviceVO);
+				if (res.status == 0){
+					this.$router.push('/');
+				}
+			} catch (error) {
+				console.log(error)
+			}
 		},
 		callAPI(){
-
 			return [
 				{
 					"name": "LoRa",
@@ -257,56 +125,22 @@ export default {
 			nextDay: moment().format('D MMM'),
 			selectedDay: moment().format('YYYY-MM-DD'),
 			prevDay: moment().add(-1, 'd').format('YYYY-MM-DD'),
-			chart1: {
-				type: 'line',
-				data: this.getChart1Data()
-			},
-			chart2: {
-				type: 'line',
-				data: this.getChart2Data()
-			},
-			chart3: {
-				type: 'line',
-				data: this.getChart3Data()
-			},
-			chart4: {
-				type: 'line',
-				data: this.getChart4Data()
-			},
-			chart5: {
-				type: 'line',
-				data: this.getChart5Data()
-			},
-			newDeviceVO: {
+			deviceVO: {
 				"name": "",
-				"uuid": "",
 				"location": "",
-				"protocol": "",
-				"type": ""
+				"protocol": "HTTP",
+				"type": "Hardware Divce",
+				"fields": ""
 			},
-			newUuid: "",
-			fieldNumber: 2
+			fieldList :[
+				{"name": "", "type": "String", "desc": ""}
+			],
+			newUuid: ""
 		}
 	},
 	mounted() {
 		const msnry = new Masonry('[data-masonry]');
 		this.newUuid = this.getUUID();
-	},
-	created() {
-		this.emitter.on('theme-reload', (evt) => {
-			this.renderComponent = false;
-			this.$nextTick(() => {
-				this.chart1.data = this.getChart1Data();
-				this.chart2.data = this.getChart2Data();
-				this.chart3.data = this.getChart3Data();
-				this.chart4.data = this.getChart4Data();
-				this.chart5.data = this.getChart5Data();
-				this.renderComponent = true;
-				setTimeout(() => {
-					const msnry = new Masonry('[data-masonry]');
-				}, 50);
-			});
-    	})
 	}
 }
 </script>
@@ -323,104 +157,115 @@ export default {
 				
 					<!-- 设备信息 -->
 					<div class="modal-body">
-						<div class="mb-5">
-							<h5>Basic Device Infomation</h5>
+						<div class="mb-3">
 							
-							<form @submit.prevent="submitForm" method="POST" name="register_form">
-								<!-- 设备名字 -->
-								<div class="input-group mb-3">
-									<label class="input-group-text" for=""><i class="fa fa-tag" aria-hidden="true"></i></label>
-									<input type="text" class="form-control" placeholder="Device Name, e.g. LoRa Node" v-model="newDeviceVO.name"/>
+							
+							<form @submit.prevent="onSubmit" method="POST" name="register_form">
+								<!-- 基本信息 -->
+								<div>
+									<h5>Basic Infomation</h5>
+									<!-- 设备名字 -->
+									<div class="input-group mb-3">
+										<label class="input-group-text" for=""><i class="fa fa-tag" aria-hidden="true"></i></label>
+										<input required type="text" class="form-control" placeholder="Device Name, e.g. LoRa Node" v-model="deviceVO.name"/>
+									</div>
+
+									<!-- 设备地址 -->
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="">
+											<i class="fa fa-map-marker" aria-hidden="true"></i>
+										</label>
+										<input required type="text" class="form-control" placeholder="Device Location, e.g. Duisburg" v-model="deviceVO.location"/>
+									</div>
+									
+									<!-- 设备类型 -->
+									<div class="input-group mb-3">
+											<label class="input-group-text" for=""><i class="fa fa-globe" aria-hidden="true"></i></label>
+											<select class="form-select" aria-label="Default select example" v-model="deviceVO.type">
+												<option value="Hardware Divce">Hardware Divce</option>
+												<option value="Software Device">Software Device</option>
+											</select>
+									</div>
+
+									<!-- 网络协议类型 -->
+									<div class="input-group mb-3">
+											<label class="input-group-text"><i class="fa fa-globe" aria-hidden="true"></i></label>
+											<select class="form-select" aria-label="Default select example" v-model="deviceVO.protocol">
+												<option value="HTTP">HTTP</option>
+												<option value="MQTT">MQTT</option>
+											</select>
+									</div>
+
+									<!-- BEGIN 设备 UUID
+									<div class="input-group mb-3">
+										<label class="input-group-text"><i class="fa fa-barcode" aria-hidden="true"></i></label>
+										<input class="form-control" placeholder="UUID" :value="newUuid" :v-model="newDeviceVO.uuid" disabled/>
+									</div>
+									-->
 								</div>
 
-								<!-- 设备地址 -->
-								<div class="input-group mb-3">
-									<label class="input-group-text" for="">
-										<i class="fa fa-map-marker" aria-hidden="true"></i>
-									</label>
-									<input type="text" class="form-control" placeholder="Device Location, e.g. Duisburg" v-model="newDeviceVO.location"/>
-								</div>
-								
-								<!-- 设备类型 -->
-								<div class="input-group mb-3">
-										<label class="input-group-text" for=""><i class="fa fa-globe" aria-hidden="true"></i></label>
-										<select class="form-select" aria-label="Default select example" v-model="newDeviceVO.type">
-											<option selected>Select Device Type</option>
-											<option value="1" class="strong">Direct Device</option>
-											<option value="2">Gateway Device</option>
-											<option value="3">Virtual Device</option>
-										</select>
+								<!-- 字段信息 -->
+								<div class="my-4">
+									<h5>Field Infomation</h5>
+										<div class="mb-3 d-flex" v-for="(field, index) in fieldList">
+											<div class="input-group me-2">
+												<label class="input-group-text" :for="field.name">
+													<i class="fa fa-bars" aria-hidden="true"></i>
+												</label>
+												<input required type="text" :id="field.name" class="form-control" placeholder="Field Name" v-model="field.name">
+											</div>
+
+											<div class="input-group me-2">
+												<label class="input-group-text" :for="field.type">
+													<i class="fa fa-bookmark" aria-hidden="true"></i>
+												</label>
+												<select  class="form-select" :id="field.type" aria-label="Default select example" v-model="field.type" placeholder="Type e.g. Int">
+													<option value="Int">Int</option>
+													<option value="String">String</option>
+												</select>
+											</div>
+
+											<div class="input-group me-2">
+												<label class="input-group-text" :for="field.desc">
+													<i class="fa fa-globe" aria-hidden="true"></i>
+												</label>
+												<input type="text" :id="field.desc" class="form-control" placeholder="Field Name" v-model="field.desc">
+											</div>
+											
+											<div class="btn btn-secondary" @click="deleteField(index)">
+												<i class="fa fa-minus-square" aria-hidden="true"></i>
+											</div>
+										</div>
 								</div>
 
-								<!-- 网络协议类型 -->
-								<div class="input-group mb-3">
-										<label class="input-group-text"><i class="fa fa-globe" aria-hidden="true"></i></label>
-										<select class="form-select" aria-label="Default select example" v-model="newDeviceVO.protocol">
-											<option selected>Select transport protocol</option>
-											<option value="1">HTTP</option>
-											<option value="2">MQTT</option>
-										</select>
+								<!-- SUBMIT BUTTON -->
+								<div class="text-center">
+									<div class="btn btn-secondary" @click="addField">
+										<i class="fa fa-plus-square" aria-hidden="true"></i>
+									</div>
 								</div>
 
-								<!-- BEGIN 设备 UUID -->
-								<div class="input-group mb-3">
-									<label class="input-group-text"><i class="fa fa-barcode" aria-hidden="true"></i></label>
-									<input class="form-control" placeholder="UUID" :value="newUuid" :v-model="newDeviceVO.uuid" disabled/>
+								<!-- 模态框底部 -->
+								<div class="row mt-5">
+									<div class="text-center col-6">
+										<button type="submit" class="btn btn-primary w-100">
+											<i class="bi bi-check-lg"></i>
+										</button>
+										
+									</div>
+
+									<!-- 模态框底部 -->
+									<div class="text-center col-6">
+										<button type="reset" class="btn btn-theme w-100" @click="resetForm">
+											<i class="bi bi-arrow-counterclockwise"></i>
+										</button>
+									</div>
 								</div>
-								<!-- END 设备 UUID -->
 							</form>
 						</div>
 						
-
-						<!-- 字段信息 -->
-						<div>
-							<h5>Field Infomation</h5>
-							<form @submit.prevent="submitForm" method="POST" name="register_form">
-								<div class="mb-3 d-flex" v-for="n in fieldNumber">
-									<div class="input-group me-2">
-										<label class="input-group-text" for="">
-											<i class="fa fa-bars" aria-hidden="true"></i>
-										</label>
-										<input type="text" class="form-control" placeholder="Field Name">
-									</div>
-									
-									<div class="input-group me-2">
-										<label class="input-group-text" for="">
-											<i class="fa fa-globe" aria-hidden="true"></i>
-										</label>
-										<select class="form-select" aria-label="Default select example" placeholder="Type e.g. Int">
-											<option value="1">Int</option>
-											<option value="2">Two</option>
-											<option value="3">Three</option>
-										</select>
-									</div>
-
-									<div class="input-group me-2">
-										<label class="input-group-text" for="">
-											<i class="fa fa-bookmark" aria-hidden="true"></i>
-										</label>
-										
-										<input type="text" class="form-control" placeholder="Length">
-									</div>
-									
-									<div class="btn btn-secondary" @click="fieldNumber--">
-										<i class="fa fa-minus-square" aria-hidden="true"></i>
-									</div>
-								</div>
-							</form>
-						</div>
-
-						<!-- SUBMIT BUTTON -->
-						<div class="m-3 text-center">
-							<div class="btn btn-secondary" @click="fieldNumber++">
-								<i class="fa fa-plus-square" aria-hidden="true"></i>
-							</div>
-						</div>
-					</div>
-				
-					<!-- 模态框底部 -->
-					<div class="m-3 text-center">
-						<button type="submit" class="btn btn-theme w-100">Submit</button>
+						
+						
 					</div>
 				</div>
 			</div>

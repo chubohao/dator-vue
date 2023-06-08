@@ -15,3 +15,11 @@ export function register(data:any){
 		data
 	})
 }
+
+export function insertDevice(data:any){
+	return request({
+		url: '/insertDevice',
+		method: "post",
+		data
+	})
+}
