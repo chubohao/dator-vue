@@ -19,17 +19,6 @@ export const useAppSidebarMenuStore = defineStore({
 			text: 'Analytics'
 		},
 		{
-			url: '/email/',
-			icon: 'fa fa-envelope',
-			text: 'Email [待删除]',
-			label: '6',
-			children: [
-				{ url: '/email/inbox', text: 'Inbox' },
-				{ url: '/email/compose', text: 'Compose' },
-				{ url: '/email/detail', text: 'Detail' }
-			]
-		},
-		{
 			is_divider: true
 		},
 
@@ -58,23 +47,6 @@ export const useAppSidebarMenuStore = defineStore({
 			url: '/database',
 			icon: 'fa fa-database',
 			text: 'Database'
-		}, 
-		{
-			url: '/widgets',
-			icon: 'fa fa-qrcode',
-			text: 'Widgets [待删除]'
-		}, 
-		{
-			url: '/pos',
-			icon: 'fa fa-wallet',
-			text: 'POS System [待删除]',
-			children: [
-				{ url: '/pos/customer-order', text: 'Customer Order' }, 
-				{ url: '/pos/kitchen-order', text: 'Kitchen Order' }, 
-				{ url: '/pos/counter-checkout', text: 'Counter Checkout' }, 
-				{ url: '/pos/table-booking', text: 'Table Booking' }, 
-				{ url: '/pos/menu-stock', text: 'Menu Stock' }
-			]
 		},
 		{
 			url: '/ui/',
