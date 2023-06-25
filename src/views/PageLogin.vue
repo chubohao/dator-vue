@@ -26,7 +26,7 @@ export default defineComponent({
 		async onSubmit() {
 			try {
 				const res = await login(this.form);
-				if (res.status == 0){
+				if (res.data.status == 0){
 					userAuth.storeLoginStatus(res, this.form);
 					this.$router.push('/');
 				} else {

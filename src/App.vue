@@ -31,8 +31,8 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
 	NProgress.done();
 });
-
 </script>
+
 
 <template>
 	<div class="app" v-bind:class="{ 

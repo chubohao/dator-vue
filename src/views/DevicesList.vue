@@ -1,15 +1,37 @@
 <script lang="ts">
 import { useAppVariableStore } from '@/stores/app-variable';
 import { useAppOptionStore } from '@/stores/app-option';
+import { useAuthStore } from '@/stores/user-auth';
 import chartjs from '@/components/plugins/Chartjs.vue';
 import datepicker from 'vue3-datepicker';
 import Masonry from 'masonry-layout';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-import { insertDevice } from "@/api/user";
+import { insertDevice, devicesList, deleteDevice } from "@/api/user";
+import { Field } from 'vee-validate';
 
 let appVariable = useAppVariableStore();
 const appOption = useAppOptionStore();
+const useAuth = useAuthStore();
+
+interface Filed {
+	name: string,
+	type: string,
+	desc: string
+}
+
+interface DeviceInfo {
+	deviceId: string,
+	deviceName: string,
+	secretKey: string,
+	userId: string,
+	type: string,
+	status: number,
+	createTime: string,
+	location: string,
+	protocol: string,
+	fields: Filed[]
+}
 
 export default {
 	beforeCreate() {
@@ -24,23 +46,27 @@ export default {
 	methods: {
 		resetForm() {
 			this.deviceVO = {
+				"userId": useAuth.user.id,
 				"name": "",
 				"location": "",
 				"protocol": "HTTP",
 				"type": "Hardware Divce",
-				"fields": ""
-			},
-			this.fieldList = [
-				{"name": "", "type": "String", "desc": ""}
-			]
+				"fields": [
+					{
+						"name": "", 
+						"type": "String", 
+						"desc": ""
+					}
+				]
+			}
 		},
 		addField() {
-			this.fieldList.push(
+			this.deviceVO.fields.push(
 				{"name": "", "type": "String", "desc": ""}
 			)
 		},
 		deleteField(index:any){
-			this.fieldList.splice(index, 1)
+			this.deviceVO.fields.splice(index, 1)
 		},
 		getPrevDay() {
 			return this.prevDay;
@@ -66,100 +92,110 @@ export default {
 			return uuidv4().toUpperCase();
 		},
 		async onSubmit() {
-			const fields = JSON.stringify(this.fieldList)
-			this.deviceVO.fields = fields;
 			try {
 				const res = await insertDevice(this.deviceVO);
-				if (res.status == 0){
-					this.$router.push('/');
+				if (res.data.status == 0){
+					this.closeModal();
+					this.resetForm();
+					this.getDevicesList();
 				}
 			} catch (error) {
 				console.log(error)
 			}
 		},
-		callAPI(){
-			return [
-				{
-					"name": "LoRa",
-					"uuid": "96F5E825-9141-42E8-8EE5-B0C2D07238E4",
-					"status": 0,
-					"img": "/assets/img/devices/D1.png",
-					"location": "Duisburg",
-					"dataVolume": "80",
-					"trend": "+5"
-				},
-				{
-					"name": "Sensor",
-					"uuid": "FC4372C7-F49F-4F33-9BBA-8DF0CDA19A52",
-					"status": 1,
-					"img": "/assets/img/devices/D2.png",
-					"location": "Düsseldorf",
-					"dataVolume": "10",
-					"trend": "+1"
-				},
-				{
-					"name": "Gateway",
-					"uuid": "ED96EDB3-7FA9-4F02-B699-104AB0F5F857",
-					"status": 1,
-					"img": "/assets/img/devices/D3.png",
-					"location": "Beijing",
-					"dataVolume": "100.9",
-					"trend": "+101"
-				},
-				{
-					"name": "NB-IoT",
-					"uuid": "4190B276-05CB-40DC-8628-01F8336927C0",
-					"status": 3,
-					"img": "/assets/img/devices/D4.png",
-					"location": "Shanghai",
-					"dataVolume": "60.01",
-					"trend": "+200"
+		closeModal(){
+			document.getElementById('close')?.click();
+		},
+		async getDevicesList() {
+			this.devicesList = []
+			const userInfo = {
+				userId: parseInt(useAuth.user.id),
+				page: "1",
+				pageSize: "20"
+			}
+			try {
+				const res = await devicesList(userInfo);
+				if (res.data.status == 0){
+					res.data.data?.forEach((element:DeviceInfo) => {
+						var deviceInfo = {
+							name: element.deviceName,
+							uuid: element.deviceId,
+							createTime: element.createTime.slice(0, 10),
+							status: 1,
+							img: `/assets/img/devices/DA${parseInt(element.deviceId)%10}.png`,
+							location: element.location,
+							dataVolume: (parseInt(element.deviceId)*2).toString(),
+							trend: element.deviceId
+						}
+						this.devicesList.push(deviceInfo)
+					
+					});
 				}
-			]
+			} catch (error) {
+				console.log(error)
+			}
+			
+		},
+		async deleteDevice(deviceId:String) {
+			const deviceInfo = {
+				deviceId: deviceId,
+				userId: useAuth.user.id.toString()
+			}
+			try {
+				const res = await deleteDevice(deviceInfo);
+				if (res.data.status == 0){
+					this.getDevicesList();
+				}
+			}catch (error) {
+				console.log(error)
+			}
 		}
 	},
 	data() {
 		return {
+			dismissModal: false,
 			renderComponent: true,
 			picked: new Date(),
 			nextDay: moment().format('D MMM'),
 			selectedDay: moment().format('YYYY-MM-DD'),
 			prevDay: moment().add(-1, 'd').format('YYYY-MM-DD'),
 			deviceVO: {
+				"userId": useAuth.user.id,
 				"name": "",
 				"location": "",
 				"protocol": "HTTP",
 				"type": "Hardware Divce",
-				"fields": ""
+				"fields": [
+					{
+						"name": "", 
+						"type": "String", 
+						"desc": ""
+					}
+				]
 			},
-			fieldList :[
-				{"name": "", "type": "String", "desc": ""}
-			],
-			newUuid: ""
+
+			devicesList:  []
 		}
 	},
 	mounted() {
-		const msnry = new Masonry('[data-masonry]');
-		this.newUuid = this.getUUID();
+		this.getDevicesList()
 	}
 }
 </script>
 <template>
 	<!-- BEG 添加设备模态框 -->
-	<div class="modal modal-lg" id="add">
+	<div class="modal modal-lg" id="add" ref="add">
 			<div class="modal-dialog">
 				<div class="modal-content px-4 py-2">
 					<!-- 模态框头部 -->
 					<div class="modal-header border-0">
 						<h4 class="modal-title">ADD A NEW DEVICE</h4>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" id="close"></button>
 					</div>
 				
 					<!-- 设备信息 -->
 					<div class="modal-body">
 						<div class="mb-3">
-							
-							
 							<form @submit.prevent="onSubmit" method="POST" name="register_form">
 								<!-- 基本信息 -->
 								<div>
@@ -207,7 +243,7 @@ export default {
 								<!-- 字段信息 -->
 								<div class="my-4">
 									<h5>Field Infomation</h5>
-										<div class="mb-3 d-flex" v-for="(field, index) in fieldList">
+										<div class="mb-3 d-flex" v-for="(field, index) in deviceVO.fields">
 											<div class="input-group me-2">
 												<label class="input-group-text" :for="field.name">
 													<i class="fa fa-bars" aria-hidden="true"></i>
@@ -219,9 +255,9 @@ export default {
 												<label class="input-group-text" :for="field.type">
 													<i class="fa fa-bookmark" aria-hidden="true"></i>
 												</label>
-												<select  class="form-select" :id="field.type" aria-label="Default select example" v-model="field.type" placeholder="Type e.g. Int">
-													<option value="Int">Int</option>
+												<select  class="form-select" :id="field.type" aria-label="Default select example" v-model="field.type" placeholder="Type e.g. Int">												
 													<option value="String">String</option>
+													<option value="Int">Int</option>
 												</select>
 											</div>
 
@@ -260,6 +296,7 @@ export default {
 											<i class="bi bi-arrow-counterclockwise"></i>
 										</button>
 									</div>
+
 								</div>
 							</form>
 						</div>
@@ -305,7 +342,7 @@ export default {
 			<i class="bi bi-plus-square"></i>
 			<span class="ms-2">Add</span>
 		</div>
-		
+
 		<!-- <span class="ms-3">compared to {{ getPrevDay() }}</span>-->
 	</form>
 	<!-- END 搜索条件和添加按钮 -->
@@ -313,7 +350,7 @@ export default {
 	<!-- BEGIN BODY -->
 	<div class="row" data-masonry='{"percentPosition": true }' v-if="renderComponent">
 		<!-- BEGIN 设备列表 -->
-		<div class="col-lg-6 col-xl-4 mb-3" v-for="(device) in callAPI()">
+		<div href="" class="col-lg-6 col-xl-4 mb-3 text-decoration-none" v-for="(device) in devicesList">
 			<!-- BEGIN card -->
 			<card class="mask">
 				<card-body>
@@ -321,11 +358,11 @@ export default {
 					<div class="row">
 						<!-- BEG 设备LOGO -->
 						<div class="col-3">
-							<img :src="device.img" alt="" height="83">
+							<img :src="device.img" alt="" height="85">
 						</div>
 						<!-- END 设备LOGO -->
 						
-						<div class="col-9 px-2">
+						<div class="col-9 px-3">
 							<!-- BEGIN 设备名字和状态 -->
 							<div class="d-flex align-items-center mb-2">
 								<a href="" class="flex-fill fw-bold h5 text-decoration-none">{{device.name}}</a>
@@ -335,22 +372,36 @@ export default {
 
 							<!-- BEGIN 设备UUID -->
 							<div class="d-flex align-items-center mb-2">
-								<span class="flex-fill small">{{device.uuid}}</span>
+								<span class="small pe-2">ID : {{device.uuid}}</span>
+								<span class="small pe-2">Date : {{device.createTime}}</span>
 							</div>
 							<!-- END 设备UUID -->
 
 							<!-- BEGIN 设备位置，数据量和趋势 -->
-							<div class="d-flex align-items-center mb-3">
-								<i class="flex-fill fa fa-map-marker" aria-hidden="true"></i>
-								<div class="flex-fill">{{device.location}}</div>
-
-								<i class="flex-fill fa fa-database " aria-hidden="true"></i>
-								<div class="flex-fill">{{device.dataVolume}} KB</div>
-
-								<i class="flex-fill fa fa-line-chart" aria-hidden="true"></i>
-								<small class="fw-400 ms-auto text-theme">{{device.trend}} %</small>
+							<div class="d-flex align-items-center">
+								<div class="d-flex align-items-center mb-2">
+									<i class="fa fa-map-marker pe-2" aria-hidden="true"></i>
+									<div class="pe-4">{{device.location}}</div>
+								</div>
+								
+								<div class="d-flex align-items-center mb-2">
+									<i class="pe-2 fa fa-database " aria-hidden="true"></i>
+									<div class="pe-4">{{device.dataVolume}} KB</div>
+								</div>
+								
+								<div class="d-flex align-items-center mb-2">
+									<i class="pe-2 fa fa-line-chart" aria-hidden="true"></i>
+									<small class="fw-400 ms-auto text-theme">{{device.trend}} %</small>
+								</div>
+								
 							</div>
 							<!-- END 设备位置，数据量和趋势 -->
+
+							<!-- BEGIN 设备修改和删除 -->
+							<div class="d-flex align-items-center mb-1">
+								<a href="" class="bi bi-archive-fill pe-3"></a>
+								<a class="bi bi-trash-fill" @click="deleteDevice(device.uuid)"></a>
+							</div>
 						</div>
 					</div>
 				</card-body>

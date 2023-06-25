@@ -23,3 +23,19 @@ export function insertDevice(data:any){
 		data
 	})
 }
+
+export function deleteDevice(data:any){
+	return request({
+		url: '/deleteDevice',
+		method: "post",
+		data
+	})
+}
+
+export function devicesList(data:any){
+	return request({
+		url: '/deviceList',
+		method: "post",
+		data
+	})
+}

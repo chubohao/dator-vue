@@ -6,6 +6,7 @@ import { string } from 'yup';
 export const useAuthStore = defineStore('auth', {
     state: () => ({
             isAuthenticated: false,
+            timer: "",
             user: {
                 id: "",
                 name: "",
@@ -24,17 +25,19 @@ export const useAuthStore = defineStore('auth', {
 
         storeLoginStatus(res:any, form:any) {
             this.isAuthenticated = true;
-            this.user.email = form.email;
-            this.user.name = res.data.name;
-            this.user.id = res.data.id;
-            this.user.token = res.data.token;
+            this.user.email = res.data.data.email;
+            this.user.name = res.data.data.name;
+            this.user.id = res.data.data.userId;
+            this.user.token = res.data.data.token;
+            if (form.rememberMe == "True"){
+                this.timer = "300";
+            } else {
+                this.timer = "10"
+            }
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('user', JSON.stringify(this.user));
-            if (form.rememberMe == "True"){
-                this.startLogoutTimer(30);
-            } else {
-                this.startLogoutTimer(0.1);
-            }
+            localStorage.setItem('timer', this.timer);
+            this.startLogoutTimer(this.timer);
         },
 
         logout() {
@@ -46,16 +49,16 @@ export const useAuthStore = defineStore('auth', {
                 email: "",
                 token: ""
             };
-            localStorage.removeItem('isAuthenticated');
-            localStorage.removeItem('user');
+            this.timer = "";
+
+            localStorage.clear();
             this.clearLogoutTimer();
         },
 
         startLogoutTimer(minu:any) {
-            const logoutTime = minu * 60 * 1000; // 30分钟
             this.logoutTimerId = setTimeout(() => {
                 this.logout();
-            }, logoutTime);
+            }, parseInt(minu) * 60 * 1000);
         },
 
         clearLogoutTimer() {
@@ -67,17 +70,19 @@ export const useAuthStore = defineStore('auth', {
 
         resetLogoutTimer() {
             this.clearLogoutTimer();
-            this.startLogoutTimer(5);
+            this.startLogoutTimer(this.timer);
         },
 
         checkAuth() {
             const isAuthenticated = localStorage.getItem('isAuthenticated');
             const user = localStorage.getItem('user');
-            if (isAuthenticated && user) {
+            const timer = localStorage.getItem('timer')
+            if (isAuthenticated && user && timer) {
                 this.isAuthenticated = true;
                 this.user = JSON.parse(user);
-                this.startLogoutTimer(5);
-        }
+                this.timer = timer;
+                this.startLogoutTimer(this.timer);
+            }
         },
     },
 });
