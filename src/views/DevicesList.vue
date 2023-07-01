@@ -53,7 +53,7 @@ export default {
 				"type": "Hardware Divce",
 				"fields": [
 					{
-						"name": "", 
+						"name": "",  
 						"type": "String", 
 						"desc": ""
 					}
@@ -365,7 +365,7 @@ export default {
 						<div class="col-9 px-3">
 							<!-- BEGIN 设备名字和状态 -->
 							<div class="d-flex align-items-center mb-2">
-								<a href="" class="flex-fill fw-bold h5 text-decoration-none">{{device.name}}</a>
+								<router-link  tag="li" class="col" class-active="active" :to="'/devices/detail?deviceId=' + device.uuid" exact>{{device.name}}</router-link>
 								<div class="btn-circle" :style="getStatuOfDevice(device.status)"></div>
 							</div>
 							<!-- END 设备名字和状态 -->
@@ -400,7 +400,7 @@ export default {
 							<!-- BEGIN 设备修改和删除 -->
 							<div class="d-flex align-items-center mb-1">
 								<a href="" class="bi bi-archive-fill pe-3"></a>
-								<a class="bi bi-trash-fill" @click="deleteDevice(device.uuid)"></a>
+								<a href="" class="bi bi-trash-fill" @click="deleteDevice(device.uuid)"></a>
 							</div>
 						</div>
 					</div>

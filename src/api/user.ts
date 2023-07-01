@@ -39,3 +39,27 @@ export function devicesList(data:any){
 		data
 	})
 }
+
+export function deviceDetail(data:any){
+	return request({
+		url: '/deviceDetail',
+		method: "post",
+		data
+	})
+}
+
+export function loraDeviceData(data:any){
+	return request({
+		url: '/lora/device/dataLoRaQuery',
+		method: "post",
+		data
+	})
+}
+
+export function loraDeviceStatus(data:any){
+	return request({
+		url: '/lora/device/statusLoRaQuery',
+		method: "post",
+		data
+	})
+}
